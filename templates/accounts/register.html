@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Регистрация — Moodee{% endblock %}
+
+{% block content %}
+<section class="screen">
+    <h1>Регистрация</h1>
+    <p>Создайте аккаунт, чтобы сохранять историю</p>
+
+    <form class="form" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button class="primary" type="submit">Создать аккаунт</button>
+    </form>
+
+    <a href="{% url 'login' %}">Уже есть аккаунт? Войти</a>
+</section>
+{% endblock %}

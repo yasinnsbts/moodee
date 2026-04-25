@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} — Moodee{% endblock %}
+
+{% block content %}
+<section class="screen">
+    <h1>{{ title }}</h1>
+    <p>{{ subtitle }}</p>
+
+    <form class="form" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button class="primary" type="submit">Сохранить</button>
+        <a class="button secondary" href="{% url 'dashboard' %}">Отмена</a>
+
+        {% if entry %}
+            <a class="button danger" href="{% url 'entry_delete' entry.pk %}">Удалить запись</a>
+        {% endif %}
+    </form>
+</section>
+{% endblock %}

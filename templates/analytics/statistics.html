@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Статистика — Moodee{% endblock %}
+
+{% block content %}
+<section class="screen">
+    <h1>Аналитика настроения</h1>
+
+    <div>
+        <a href="?period=week">Неделя</a>
+        <a href="?period=month">Месяц</a>
+        <a href="?period=year">Год</a>
+    </div>
+
+    <div class="card">
+        <p>Средний балл за период</p>
+        {% if average_score %}
+            <h2>{{ average_score }} / 5</h2>
+        {% else %}
+            <h2>Нет данных</h2>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <canvas id="moodChart"></canvas>
+    </div>
+
+    <button class="secondary" type="button">Экспорт данных — позже</button>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const labels = {{ chart_labels_json|safe }};
+    const values = {{ chart_values_json|safe }};
+
+    const ctx = document.getElementById("moodChart");
+
+    if (ctx) {
+        new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "Настроение",
+                    data: values,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        min: 1,
+                        max: 5,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                }
+            }
+        });
+    }
+</script>
+{% endblock %}

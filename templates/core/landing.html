@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="screen">
+    <div class="logo">◠◡</div>
+    <h1>Moodee</h1>
+    <p>Дневник настроений</p>
+    <p>Отмечайте эмоции, ищите паттерны и получайте мягкие рекомендации от ИИ.</p>
+
+    <a class="button primary" href="{% url 'register' %}">Начать</a>
+    <a class="button secondary" href="{% url 'login' %}">Войти / Зарегистрироваться</a>
+
+    <p class="small">mood tracking • self care • AI insights</p>
+</section>
+{% endblock %}

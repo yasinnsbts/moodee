@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: moodee_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: moodee_db
+      POSTGRES_USER: moodee_user
+      POSTGRES_PASSWORD: moodee_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - moodee_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  moodee_postgres_data:

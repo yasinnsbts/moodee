@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Анализ недели — Moodee{% endblock %}
+
+{% block content %}
+<section class="screen">
+    <h1>Анализ вашего настроения за неделю</h1>
+
+    <div class="card">
+        <h2>Ключевые инсайты</h2>
+
+        <ul>
+            {% for insight in insights %}
+                <li>{{ insight }}</li>
+            {% endfor %}
+        </ul>
+
+        <p><strong>Рекомендация:</strong> {{ recommendation }}</p>
+    </div>
+
+    <p class="small">
+        Это не медицинская рекомендация. Анализ основан только на ваших записях в дневнике.
+    </p>
+
+    <a class="button secondary" href="{% url 'practices' %}">Вернуться к практикам</a>
+</section>
+{% endblock %}

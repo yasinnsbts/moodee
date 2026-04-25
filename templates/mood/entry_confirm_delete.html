@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Удаление записи — Moodee{% endblock %}
+
+{% block content %}
+<section class="screen">
+    <h1>Удалить запись?</h1>
+    <p>Вы уверены, что хотите удалить запись за {{ entry.date }}?</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button class="danger" type="submit">Да, удалить</button>
+        <a class="button secondary" href="{% url 'dashboard' %}">Отмена</a>
+    </form>
+</section>
+{% endblock %}

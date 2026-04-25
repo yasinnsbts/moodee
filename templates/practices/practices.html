@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Практики — Moodee{% endblock %}
+
+{% block content %}
+<section class="screen">
+    <h1>Дыхательные практики</h1>
+    <p>Подборка мягких упражнений на каждый день</p>
+
+    {% for practice in practices %}
+        <article class="card">
+            <h2>{{ practice.title }}</h2>
+            <p>{{ practice.cycles }} цикла • {{ practice.duration_minutes }} минуты</p>
+            <p>{{ practice.description }}</p>
+            <button class="primary" type="button">Выполнить</button>
+        </article>
+    {% empty %}
+        <div class="card">
+            <p>Практики пока не добавлены.</p>
+        </div>
+    {% endfor %}
+
+    <div class="card">
+        <h2>Рекомендация от нейросети</h2>
+        <p>Низкое настроение повторялось несколько дней подряд. Попробуйте короткую дыхательную практику вечером.</p>
+        <a class="button secondary" href="{% url 'ai_report' %}">Получить анализ недели от ИИ</a>
+    </div>
+</section>
+{% endblock %}

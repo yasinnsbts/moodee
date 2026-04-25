@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Главная — Moodee{% endblock %}
+
+{% block content %}
+<section class="screen">
+    <h1>Добрый день, {{ request.user.first_name|default:request.user.username }}!</h1>
+    <p>Ваш дневник на сегодня готов</p>
+
+    <div class="card">
+        <p>Среднее настроение за 7 дней</p>
+        {% if weekly_average %}
+            <h2>{{ weekly_average }} / 5</h2>
+        {% else %}
+            <h2>Нет данных</h2>
+        {% endif %}
+    </div>
+
+    <a class="button primary" href="{% url 'entry_create' %}">+ Добавить запись</a>
+
+    <h2>Последние записи</h2>
+
+    {% for entry in latest_entries %}
+        <article class="card">
+            <p>{{ entry.date }}</p>
+            <h3>{{ entry.emoji }} {{ entry.mood_score }}/5</h3>
+            <p>{{ entry.note|default:"Без заметки" }}</p>
+
+            <a href="{% url 'entry_update' entry.pk %}">✎ Редактировать</a>
+            <a href="{% url 'entry_delete' entry.pk %}">🗑 Удалить</a>
+        </article>
+    {% empty %}
+        <div class="card">
+            <p>Пока нет записей. Добавьте первую запись настроения.</p>
+        </div>
+    {% endfor %}
+</section>
+{% endblock %}
