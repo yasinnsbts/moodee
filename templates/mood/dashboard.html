@@ -17,6 +17,7 @@
     </div>
 
     <a class="button primary" href="{% url 'entry_create' %}">+ Добавить запись</a>
+    <a class="button secondary" href="{% url 'entry_list' %}">История записей</a>
 
     <h2>Последние записи</h2>
 
@@ -24,6 +25,8 @@
         <article class="card">
             <p>{{ entry.date }}</p>
             <h3>{{ entry.emoji }} {{ entry.mood_score }}/5</h3>
+            <p>Самочувствие: {{ entry.wellbeing_score }}/5</p>
+            <p>Активность: {{ entry.activity_score }}/5</p>
             <p>{{ entry.note|default:"Без заметки" }}</p>
 
             <a href="{% url 'entry_update' entry.pk %}">✎ Редактировать</a>
