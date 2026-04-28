@@ -6,14 +6,19 @@
 <section class="screen">
     <h1>Аналитика настроения</h1>
 
+    <div class="card">
+        <p>Период: {{ period_title }}</p>
+        <p>Количество записей: {{ entries_count }}</p>
+    </div>
+
     <div>
-        <a href="?period=week">Неделя</a>
-        <a href="?period=month">Месяц</a>
-        <a href="?period=year">Год</a>
+        <a class="button secondary" href="?period=week">Неделя</a>
+        <a class="button secondary" href="?period=month">Месяц</a>
+        <a class="button secondary" href="?period=year">Год</a>
     </div>
 
     <div class="card">
-        <p>Средний балл за период</p>
+        <p>Среднее настроение</p>
         {% if average_score %}
             <h2>{{ average_score }} / 5</h2>
         {% else %}
@@ -22,7 +27,51 @@
     </div>
 
     <div class="card">
+        <p>Среднее самочувствие</p>
+        {% if average_wellbeing %}
+            <h2>{{ average_wellbeing }} / 5</h2>
+        {% else %}
+            <h2>Нет данных</h2>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <p>Средняя активность</p>
+        {% if average_activity %}
+            <h2>{{ average_activity }} / 5</h2>
+        {% else %}
+            <h2>Нет данных</h2>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <h2>Динамика</h2>
         <canvas id="moodChart"></canvas>
+    </div>
+
+    <div class="card">
+        <h2>Распределение настроений</h2>
+        <ul>
+            {% for item in distribution_items %}
+                <li>{{ item.score }} — {{ item.label }}: {{ item.count }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2>Лучший и сложный день</h2>
+
+        {% if best_entry %}
+            <p>Лучший день: {{ best_entry.date }} — {{ best_entry.emoji }} {{ best_entry.mood_score }}/5</p>
+        {% else %}
+            <p>Лучший день: нет данных</p>
+        {% endif %}
+
+        {% if worst_entry %}
+            <p>Самый сложный день: {{ worst_entry.date }} — {{ worst_entry.emoji }} {{ worst_entry.mood_score }}/5</p>
+        {% else %}
+            <p>Самый сложный день: нет данных</p>
+        {% endif %}
     </div>
 
     <button class="secondary" type="button">Экспорт данных — позже</button>
@@ -33,7 +82,9 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     const labels = {{ chart_labels_json|safe }};
-    const values = {{ chart_values_json|safe }};
+    const moodValues = {{ chart_mood_values_json|safe }};
+    const wellbeingValues = {{ chart_wellbeing_values_json|safe }};
+    const activityValues = {{ chart_activity_values_json|safe }};
 
     const ctx = document.getElementById("moodChart");
 
@@ -42,13 +93,26 @@
             type: "line",
             data: {
                 labels: labels,
-                datasets: [{
-                    label: "Настроение",
-                    data: values,
-                    tension: 0.3
-                }]
+                datasets: [
+                    {
+                        label: "Настроение",
+                        data: moodValues,
+                        tension: 0.3
+                    },
+                    {
+                        label: "Самочувствие",
+                        data: wellbeingValues,
+                        tension: 0.3
+                    },
+                    {
+                        label: "Активность",
+                        data: activityValues,
+                        tension: 0.3
+                    }
+                ]
             },
             options: {
+                responsive: true,
                 scales: {
                     y: {
                         min: 1,

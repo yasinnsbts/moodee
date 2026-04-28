@@ -1,6 +1,3 @@
-from django.shortcuts import render
-
-# Create your views here.
 from datetime import timedelta
 
 from django.contrib import messages
@@ -34,6 +31,34 @@ def dashboard_view(request):
     }
 
     return render(request, "mood/dashboard.html", context)
+
+
+@login_required
+def entry_list_view(request):
+    entries = MoodEntry.objects.filter(user=request.user).order_by("-date", "-created_at")
+
+    start_date = request.GET.get("start_date")
+    end_date = request.GET.get("end_date")
+    mood_score = request.GET.get("mood_score")
+
+    if start_date:
+        entries = entries.filter(date__gte=start_date)
+
+    if end_date:
+        entries = entries.filter(date__lte=end_date)
+
+    if mood_score:
+        entries = entries.filter(mood_score=mood_score)
+
+    context = {
+        "entries": entries,
+        "start_date": start_date or "",
+        "end_date": end_date or "",
+        "mood_score": mood_score or "",
+        "entries_count": entries.count(),
+    }
+
+    return render(request, "mood/entry_list.html", context)
 
 
 @login_required

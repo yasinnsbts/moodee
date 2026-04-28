@@ -7,6 +7,23 @@
     <h1>Анализ вашего настроения за неделю</h1>
 
     <div class="card">
+        <p>Период: {{ period_start }} — {{ period_end }}</p>
+        <p>Количество записей: {{ entries_count }}</p>
+
+        {% if average %}
+            <p>Среднее настроение: {{ average }} / 5</p>
+        {% endif %}
+
+        {% if average_wellbeing %}
+            <p>Среднее самочувствие: {{ average_wellbeing }} / 5</p>
+        {% endif %}
+
+        {% if average_activity %}
+            <p>Средняя активность: {{ average_activity }} / 5</p>
+        {% endif %}
+    </div>
+
+    <div class="card">
         <h2>Ключевые инсайты</h2>
 
         <ul>
