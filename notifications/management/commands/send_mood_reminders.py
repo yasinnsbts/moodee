@@ -24,10 +24,10 @@ class Command(BaseCommand):
             if user_settings and user_settings.reminder_time:
                 reminder_time_text = f" Вы выбрали время напоминания: {user_settings.reminder_time.strftime('%H:%M')}."
 
-            subject = "Moodee: время отметить настроение"
+            subject = "Ладно: время отметить настроение"
             message = (
                 f"Здравствуйте, {user.first_name or user.username}!\n\n"
-                "Это мягкое напоминание заполнить дневник настроения в Moodee.\n"
+                "Это мягкое напоминание заполнить дневник настроения в Ладно.\n"
                 "Отметьте настроение, самочувствие, активность и короткую заметку о том, что повлияло на состояние.\n"
                 f"{reminder_time_text}\n\n"
                 "Это письмо отправлено из локальной версии проекта для демонстрации функциональности."

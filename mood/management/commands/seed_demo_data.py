@@ -10,7 +10,7 @@ from practices.models import BreathingPractice
 
 
 class Command(BaseCommand):
-    help = "Create demo data for Moodee"
+    help = "Create demo data for Ладно"
 
     def handle(self, *args, **options):
         user, created = User.objects.get_or_create(
