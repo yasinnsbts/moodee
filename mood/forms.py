@@ -1,4 +1,5 @@
 from django import forms
+
 from .models import MoodEntry
 
 
@@ -20,7 +21,19 @@ class MoodEntryForm(forms.ModelForm):
             "note": forms.Textarea(
                 attrs={
                     "rows": 4,
-                    "placeholder": "Что повлияло на настроение?",
+                    "maxlength": 400,
+                    "placeholder": "Что повлияло на настроение? До 400 символов.",
                 }
             ),
         }
+        help_texts = {
+            "note": "Максимум 400 символов.",
+        }
+
+    def clean_note(self):
+        note = self.cleaned_data.get("note", "")
+
+        if len(note) > 400:
+            raise forms.ValidationError("Заметка не должна превышать 400 символов.")
+
+        return note

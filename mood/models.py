@@ -1,9 +1,9 @@
-from django.db import models
+from datetime import timedelta
 
-# Create your models here.
 from django.conf import settings
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MaxLengthValidator, MinValueValidator, MaxValueValidator
 from django.db import models
+from django.utils import timezone
 
 
 class MoodEntry(models.Model):
@@ -21,7 +21,9 @@ class MoodEntry(models.Model):
         verbose_name="Пользователь",
     )
 
-    date = models.DateField(verbose_name="Дата записи")
+    date = models.DateField(
+        verbose_name="Дата записи",
+    )
 
     mood_score = models.PositiveSmallIntegerField(
         choices=MoodChoices.choices,
@@ -43,7 +45,10 @@ class MoodEntry(models.Model):
 
     note = models.TextField(
         blank=True,
+        max_length=400,
+        validators=[MaxLengthValidator(400)],
         verbose_name="Заметка",
+        help_text="Не более 400 символов.",
     )
 
     created_at = models.DateTimeField(
@@ -76,3 +81,14 @@ class MoodEntry(models.Model):
             4: "🙂",
             5: "😍",
         }.get(self.mood_score, "😐")
+
+    @property
+    def edit_deadline(self):
+        return self.created_at + timedelta(hours=24)
+
+    @property
+    def can_edit(self):
+        if not self.created_at:
+            return True
+
+        return timezone.now() <= self.edit_deadline

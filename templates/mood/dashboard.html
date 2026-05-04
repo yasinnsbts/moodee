@@ -29,7 +29,12 @@
             <p>Активность: {{ entry.activity_score }}/5</p>
             <p>{{ entry.note|default:"Без заметки" }}</p>
 
-            <a href="{% url 'entry_update' entry.pk %}">✎ Редактировать</a>
+            {% if entry.can_edit %}
+                <a href="{% url 'entry_update' entry.pk %}">✎ Редактировать</a>
+            {% else %}
+                <p class="small">Редактирование больше недоступно: прошло 24 часа.</p>
+            {% endif %}
+
             <a href="{% url 'entry_delete' entry.pk %}">🗑 Удалить</a>
         </article>
     {% empty %}
