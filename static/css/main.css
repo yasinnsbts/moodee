@@ -105,6 +105,10 @@ button {
     flex: 1 1 120px;
 }
 
+.inline-form {
+    display: contents;
+}
+
 .bottom-nav {
     position: fixed;
     left: 50%;

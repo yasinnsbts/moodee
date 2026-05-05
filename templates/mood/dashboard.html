@@ -11,7 +11,11 @@
         {% if today_entry %}
             <p>Сегодня уже отмечено</p>
             <h2>{{ today_entry.emoji }} {{ today_entry.mood_score }}/5</h2>
-            <a class="button secondary" href="{% url 'entry_update' today_entry.pk %}">Редактировать сегодня</a>
+            {% if today_entry.can_edit %}
+                <a class="button secondary" href="{% url 'entry_update' today_entry.pk %}">Редактировать сегодня</a>
+            {% else %}
+                <p class="small">Редактирование доступно только 24 часа после создания.</p>
+            {% endif %}
         {% else %}
             <p>Сегодня ещё нет записи</p>
             <h2>2 минуты на check-in</h2>
@@ -60,7 +64,11 @@
             {% endif %}
             <p>{{ entry.note|default:"Без заметки" }}</p>
 
-            <a href="{% url 'entry_update' entry.pk %}">✎ Редактировать</a>
+            {% if entry.can_edit %}
+                <a href="{% url 'entry_update' entry.pk %}">✎ Редактировать</a>
+            {% else %}
+                <span class="small">Редактирование закрыто</span>
+            {% endif %}
             <a href="{% url 'entry_delete' entry.pk %}">🗑 Удалить</a>
         </article>
     {% empty %}

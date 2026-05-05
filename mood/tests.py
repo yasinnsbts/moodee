@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import IntegrityError
-from django.test import TransactionTestCase
+from django.test import TestCase, TransactionTestCase
 from django.utils import timezone
 
 from .forms import MoodEntryForm
@@ -66,3 +66,67 @@ class MoodEntryTests(TransactionTestCase):
 
         self.assertFalse(form.is_valid())
         self.assertIn("date", form.errors)
+
+
+class MoodEntryFormTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username="form@example.com",
+            email="form@example.com",
+            password="test-password",
+        )
+
+    def test_form_rejects_note_longer_than_400_characters(self):
+        form = MoodEntryForm(
+            data={
+                "date": timezone.localdate(),
+                "mood_score": 3,
+                "wellbeing_score": 3,
+                "activity_score": 3,
+                "stress_score": 3,
+                "anxiety_score": 3,
+                "sleep_hours": 7,
+                "factors": "",
+                "gratitude": "",
+                "note": "а" * 401,
+            },
+            user=self.user,
+        )
+
+        self.assertFalse(form.is_valid())
+        self.assertIn("note", form.errors)
+
+
+class MoodEntryEditWindowTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username="edit@example.com",
+            email="edit@example.com",
+            password="test-password",
+        )
+        self.client.force_login(self.user)
+
+    def test_fresh_entry_can_be_opened_for_editing(self):
+        entry = MoodEntry.objects.create(
+            user=self.user,
+            date=timezone.localdate(),
+            mood_score=4,
+        )
+
+        response = self.client.get(f"/entries/{entry.pk}/edit/")
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_entry_older_than_24_hours_cannot_be_edited(self):
+        entry = MoodEntry.objects.create(
+            user=self.user,
+            date=timezone.localdate(),
+            mood_score=4,
+        )
+        MoodEntry.objects.filter(pk=entry.pk).update(
+            created_at=timezone.now() - timezone.timedelta(hours=25)
+        )
+
+        response = self.client.get(f"/entries/{entry.pk}/edit/")
+
+        self.assertRedirects(response, "/entries/")

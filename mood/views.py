@@ -132,6 +132,10 @@ def entry_create_view(request):
 def entry_update_view(request, pk):
     entry = get_object_or_404(MoodEntry, pk=pk, user=request.user)
 
+    if not entry.can_edit:
+        messages.error(request, "Редактировать запись можно только в течение 24 часов после создания.")
+        return redirect("entry_list")
+
     if request.method == "POST":
         form = MoodEntryForm(request.POST, instance=entry, user=request.user)
 

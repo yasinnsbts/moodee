@@ -1,6 +1,8 @@
 from django.conf import settings
+from django.core.validators import MaxLengthValidator
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+from django.utils import timezone
 
 
 class MoodEntry(models.Model):
@@ -76,7 +78,9 @@ class MoodEntry(models.Model):
 
     note = models.TextField(
         blank=True,
+        validators=[MaxLengthValidator(400)],
         verbose_name="Заметка",
+        help_text="До 400 символов",
     )
 
     created_at = models.DateTimeField(
@@ -123,3 +127,7 @@ class MoodEntry(models.Model):
             for factor in self.factors.split(",")
             if factor.strip()
         ]
+
+    @property
+    def can_edit(self):
+        return timezone.now() <= self.created_at + timezone.timedelta(hours=24)

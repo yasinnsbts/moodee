@@ -57,7 +57,11 @@
             {% endif %}
             <p>{{ entry.note|default:"Без заметки" }}</p>
 
-            <a href="{% url 'entry_update' entry.pk %}">✎ Редактировать</a>
+            {% if entry.can_edit %}
+                <a href="{% url 'entry_update' entry.pk %}">✎ Редактировать</a>
+            {% else %}
+                <span class="small">Редактирование закрыто</span>
+            {% endif %}
             <a href="{% url 'entry_delete' entry.pk %}">🗑 Удалить</a>
         </article>
     {% empty %}

@@ -47,6 +47,7 @@ class MoodEntryForm(forms.ModelForm):
             "note": forms.Textarea(
                 attrs={
                     "rows": 4,
+                    "maxlength": 400,
                     "placeholder": "Что повлияло на настроение?",
                 }
             ),
