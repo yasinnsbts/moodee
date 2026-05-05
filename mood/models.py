@@ -1,6 +1,3 @@
-from django.db import models
-
-# Create your models here.
 from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
@@ -41,6 +38,42 @@ class MoodEntry(models.Model):
         verbose_name="Активность",
     )
 
+    stress_score = models.PositiveSmallIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(5)],
+        default=3,
+        verbose_name="Стресс",
+        help_text="1 — спокойно, 5 — очень напряжённо",
+    )
+
+    anxiety_score = models.PositiveSmallIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(5)],
+        default=3,
+        verbose_name="Тревожность",
+        help_text="1 — низкая, 5 — высокая",
+    )
+
+    sleep_hours = models.DecimalField(
+        max_digits=3,
+        decimal_places=1,
+        null=True,
+        blank=True,
+        validators=[MinValueValidator(0), MaxValueValidator(24)],
+        verbose_name="Сон, часов",
+    )
+
+    factors = models.CharField(
+        max_length=255,
+        blank=True,
+        verbose_name="Факторы дня",
+        help_text="Например: сон, работа, спорт, кофе, общение",
+    )
+
+    gratitude = models.CharField(
+        max_length=255,
+        blank=True,
+        verbose_name="За что благодарны",
+    )
+
     note = models.TextField(
         blank=True,
         verbose_name="Заметка",
@@ -63,6 +96,12 @@ class MoodEntry(models.Model):
         indexes = [
             models.Index(fields=["user", "date"]),
         ]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "date"],
+                name="unique_mood_entry_per_user_date",
+            ),
+        ]
 
     def __str__(self):
         return f"{self.user} — {self.date} — {self.mood_score}/5"
@@ -76,3 +115,11 @@ class MoodEntry(models.Model):
             4: "🙂",
             5: "😍",
         }.get(self.mood_score, "😐")
+
+    @property
+    def factor_list(self):
+        return [
+            factor.strip()
+            for factor in self.factors.split(",")
+            if factor.strip()
+        ]

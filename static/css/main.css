@@ -64,9 +64,45 @@ button {
 
 .card {
     padding: 16px;
-    border-radius: 20px;
+    border-radius: 14px;
     background: white;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.highlight {
+    border: 1px solid #d9e6d7;
+    background: #f7fbf4;
+}
+
+.metric-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.metric {
+    padding: 12px;
+}
+
+.metric p {
+    min-height: 34px;
+    margin: 0 0 8px;
+    font-size: 12px;
+    opacity: 0.75;
+}
+
+.metric h2 {
+    font-size: 22px;
+}
+
+.actions-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.actions-row .button {
+    flex: 1 1 120px;
 }
 
 .bottom-nav {
@@ -111,6 +147,46 @@ select {
     gap: 14px;
 }
 
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-weight: 600;
+}
+
+.field small {
+    font-weight: 400;
+    opacity: 0.7;
+}
+
+.field ul {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    padding: 0;
+    margin: 4px 0 0;
+    list-style: none;
+}
+
+.field li label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px;
+    border: 1px solid #d8cfc0;
+    border-radius: 12px;
+    background: #fffdf8;
+    font-weight: 500;
+}
+
+.field input[type="radio"] {
+    width: auto;
+}
+
+.error {
+    color: #9c3535;
+}
+
 .small {
     font-size: 13px;
     opacity: 0.7;
@@ -124,4 +200,18 @@ select {
     padding: 12px;
     border-radius: 12px;
     background: #e7ddcf;
+}
+
+.danger-message {
+    background: #f5d7d7;
+}
+
+@media (max-width: 360px) {
+    .metric-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .field ul {
+        grid-template-columns: 1fr;
+    }
 }

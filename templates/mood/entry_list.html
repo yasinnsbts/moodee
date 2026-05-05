@@ -34,7 +34,10 @@
         <a class="button secondary" href="{% url 'entry_list' %}">Сбросить</a>
     </form>
 
-    <a class="button primary" href="{% url 'entry_create' %}">+ Добавить запись</a>
+    <div class="actions-row">
+        <a class="button primary" href="{% url 'entry_create' %}">+ Добавить запись</a>
+        <a class="button secondary" href="{% url 'entry_export' %}?start_date={{ start_date }}&end_date={{ end_date }}&mood_score={{ mood_score }}">Экспорт CSV</a>
+    </div>
 
     {% for entry in entries %}
         <article class="card">
@@ -42,6 +45,16 @@
             <h2>{{ entry.emoji }} {{ entry.mood_score }}/5</h2>
             <p>Самочувствие: {{ entry.wellbeing_score }}/5</p>
             <p>Активность: {{ entry.activity_score }}/5</p>
+            <p>Стресс: {{ entry.stress_score }}/5 • Тревожность: {{ entry.anxiety_score }}/5</p>
+            {% if entry.sleep_hours %}
+                <p>Сон: {{ entry.sleep_hours }} ч</p>
+            {% endif %}
+            {% if entry.factors %}
+                <p>Факторы: {{ entry.factors }}</p>
+            {% endif %}
+            {% if entry.gratitude %}
+                <p>Благодарность: {{ entry.gratitude }}</p>
+            {% endif %}
             <p>{{ entry.note|default:"Без заметки" }}</p>
 
             <a href="{% url 'entry_update' entry.pk %}">✎ Редактировать</a>
