@@ -1,10 +1,10 @@
-# Moodee
+# Ладно
 
-**Moodee** — веб-дневник настроения на Django. Проект помогает пользователю ежедневно фиксировать настроение, самочувствие, активность, стресс, тревожность, сон и факторы дня, а затем смотреть статистику, историю записей и персональные инсайты.
+**Ладно** — веб-дневник настроения на Django. Проект помогает пользователю ежедневно фиксировать настроение, самочувствие, активность, стресс, тревожность, сон и факторы дня, а затем смотреть статистику, историю записей и персональные инсайты.
 
 Проект задуман как self-care инструмент для наблюдения за состоянием и паттернами поведения.
 
-> Moodee не является медицинским продуктом, не ставит диагнозы и не заменяет врача или психотерапевта.
+> Ладно не является медицинским продуктом, не ставит диагнозы и не заменяет врача или психотерапевта.
 
 ## Что умеет проект
 
@@ -27,7 +27,7 @@
 - открыть историю всех записей;
 - фильтровать записи по датам и настроению;
 - удалить свою запись;
-- экспортировать записи в CSV;
+- экспортировать записи в CSV с именем вида `пользователь_дата_время_ладно_отчет.csv`;
 - редактировать запись только в течение 24 часов после создания.
 
 Одна запись содержит:
@@ -84,6 +84,7 @@ Dashboard показывает:
 - фильтр по настроению;
 - кнопка добавления записи;
 - CSV-экспорт;
+- имя CSV-файла формируется автоматически: пользователь, дата, время, `ладно_отчет`;
 - скрытие редактирования для записей старше 24 часов.
 
 ### Статистика
@@ -194,7 +195,7 @@ python manage.py send_mood_reminders
 ## Структура проекта
 
 ```text
-moodee/
+ladno/
 ├── accounts/              # регистрация, профиль, настройки пользователя
 ├── ai_reports/            # персональные инсайты и сервис отчета
 ├── analytics/             # статистика
@@ -236,16 +237,16 @@ DEBUG=True
 ALLOWED_HOSTS=localhost,127.0.0.1
 CSRF_TRUSTED_ORIGINS=
 
-DB_NAME=moodee_db
-DB_USER=moodee_user
-DB_PASSWORD=moodee_password
+DB_NAME=ladno_db
+DB_USER=ladno_user
+DB_PASSWORD=ladno_password
 DB_HOST=localhost
 DB_PORT=5433
 
 EMAIL_HOST_USER=
 EMAIL_HOST_PASSWORD=
 EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
-DEFAULT_FROM_EMAIL=Moodee <noreply@moodee.local>
+DEFAULT_FROM_EMAIL=Ладно <noreply@ladno.local>
 ```
 
 Файл `.env` не должен попадать в git.
@@ -253,7 +254,7 @@ DEFAULT_FROM_EMAIL=Moodee <noreply@moodee.local>
 ## Запуск на Linux
 
 ```bash
-cd moodee
+cd ladno
 
 python3 -m venv .venv
 source .venv/bin/activate
@@ -289,7 +290,7 @@ http://127.0.0.1:8000/
 ```powershell
 cd C:\Projects
 git clone <url-репозитория>
-cd moodee
+cd ladno
 
 Copy-Item .env.example .env
 
@@ -411,6 +412,19 @@ python manage.py send_mood_reminders
 ```text
 Ran 7 tests
 OK
+```
+
+Последняя полная проверка:
+
+```text
+Django check — OK
+Тесты mood + ai_reports — 7 tests OK
+Миграции — применены
+Основные URL — 200
+POST-сценарии — работают
+CSV export — 200
+Заметка 401 символ — запись не создается
+Старая запись /edit/ — backend redirect
 ```
 
 ## Smoke test после изменений

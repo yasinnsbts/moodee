@@ -1,5 +1,7 @@
 from datetime import timedelta
 import csv
+import re
+from urllib.parse import quote
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -175,7 +177,14 @@ def entry_export_view(request):
     entries, start_date, end_date, mood_score = get_filtered_entries(request)
 
     response = HttpResponse(content_type="text/csv; charset=utf-8")
-    response["Content-Disposition"] = 'attachment; filename="moodee_entries.csv"'
+    username = request.user.get_username().split("@")[0]
+    safe_username = re.sub(r"[^0-9A-Za-zА-Яа-яЁё_-]+", "_", username).strip("_") or "user"
+    exported_at = timezone.localtime().strftime("%Y-%m-%d_%H-%M-%S")
+    filename = f"{safe_username}_{exported_at}_ладно_отчет.csv"
+    fallback_filename = f"{safe_username}_{exported_at}_ladno_report.csv"
+    response["Content-Disposition"] = (
+        f'attachment; filename="{fallback_filename}"; filename*=UTF-8\'\'{quote(filename)}'
+    )
     response.write("\ufeff")
 
     writer = csv.writer(response)
