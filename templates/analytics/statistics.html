@@ -17,31 +17,31 @@
         <a class="button secondary" href="?period=year">Год</a>
     </div>
 
-    <div class="card">
-        <p>Среднее настроение</p>
-        {% if average_score %}
-            <h2>{{ average_score }} / 5</h2>
-        {% else %}
-            <h2>Нет данных</h2>
-        {% endif %}
-    </div>
-
-    <div class="card">
-        <p>Среднее самочувствие</p>
-        {% if average_wellbeing %}
-            <h2>{{ average_wellbeing }} / 5</h2>
-        {% else %}
-            <h2>Нет данных</h2>
-        {% endif %}
-    </div>
-
-    <div class="card">
-        <p>Средняя активность</p>
-        {% if average_activity %}
-            <h2>{{ average_activity }} / 5</h2>
-        {% else %}
-            <h2>Нет данных</h2>
-        {% endif %}
+    <div class="metric-grid">
+        <div class="card metric">
+            <p>Настроение</p>
+            <h2>{% if average_score %}{{ average_score }}{% else %}—{% endif %}</h2>
+        </div>
+        <div class="card metric">
+            <p>Самочувствие</p>
+            <h2>{% if average_wellbeing %}{{ average_wellbeing }}{% else %}—{% endif %}</h2>
+        </div>
+        <div class="card metric">
+            <p>Активность</p>
+            <h2>{% if average_activity %}{{ average_activity }}{% else %}—{% endif %}</h2>
+        </div>
+        <div class="card metric">
+            <p>Стресс</p>
+            <h2>{% if average_stress %}{{ average_stress }}{% else %}—{% endif %}</h2>
+        </div>
+        <div class="card metric">
+            <p>Тревожность</p>
+            <h2>{% if average_anxiety %}{{ average_anxiety }}{% else %}—{% endif %}</h2>
+        </div>
+        <div class="card metric">
+            <p>Сон</p>
+            <h2>{% if average_sleep %}{{ average_sleep }} ч{% else %}—{% endif %}</h2>
+        </div>
     </div>
 
     <div class="card">
@@ -56,6 +56,39 @@
                 <li>{{ item.score }} — {{ item.label }}: {{ item.count }}</li>
             {% endfor %}
         </ul>
+    </div>
+
+    <div class="card">
+        <h2>Факторы</h2>
+
+        {% if top_factors %}
+            <p>Чаще всего встречались:</p>
+            <ul>
+                {% for factor, count in top_factors %}
+                    <li>{{ factor }}: {{ count }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Добавьте факторы в записи, чтобы увидеть закономерности.</p>
+        {% endif %}
+
+        {% if positive_factors %}
+            <p>Чаще в хорошие дни:</p>
+            <ul>
+                {% for factor, count in positive_factors %}
+                    <li>{{ factor }}: {{ count }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% if low_mood_factors %}
+            <p>Чаще в сложные дни:</p>
+            <ul>
+                {% for factor, count in low_mood_factors %}
+                    <li>{{ factor }}: {{ count }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
     </div>
 
     <div class="card">
@@ -74,7 +107,7 @@
         {% endif %}
     </div>
 
-    <button class="secondary" type="button">Экспорт данных — позже</button>
+    <a class="button secondary" href="{% url 'entry_export' %}">Экспорт данных CSV</a>
 </section>
 {% endblock %}
 
@@ -85,6 +118,9 @@
     const moodValues = {{ chart_mood_values_json|safe }};
     const wellbeingValues = {{ chart_wellbeing_values_json|safe }};
     const activityValues = {{ chart_activity_values_json|safe }};
+    const stressValues = {{ chart_stress_values_json|safe }};
+    const anxietyValues = {{ chart_anxiety_values_json|safe }};
+    const sleepValues = {{ chart_sleep_values_json|safe }};
 
     const ctx = document.getElementById("moodChart");
 
@@ -108,6 +144,22 @@
                         label: "Активность",
                         data: activityValues,
                         tension: 0.3
+                    },
+                    {
+                        label: "Стресс",
+                        data: stressValues,
+                        tension: 0.3
+                    },
+                    {
+                        label: "Тревожность",
+                        data: anxietyValues,
+                        tension: 0.3
+                    },
+                    {
+                        label: "Сон",
+                        data: sleepValues,
+                        tension: 0.3,
+                        yAxisID: "sleep"
                     }
                 ]
             },
@@ -119,6 +171,14 @@
                         max: 5,
                         ticks: {
                             stepSize: 1
+                        }
+                    },
+                    sleep: {
+                        position: "right",
+                        min: 0,
+                        max: 12,
+                        grid: {
+                            drawOnChartArea: false
                         }
                     }
                 }

@@ -5,19 +5,44 @@
 {% block content %}
 <section class="screen">
     <h1>Добрый день, {{ request.user.first_name|default:request.user.username }}!</h1>
-    <p>Ваш дневник на сегодня готов</p>
+    <p>Ваш дневник на сегодня готов. Серия записей: {{ current_streak }} дн.</p>
 
-    <div class="card">
-        <p>Среднее настроение за 7 дней</p>
-        {% if weekly_average %}
-            <h2>{{ weekly_average }} / 5</h2>
+    <div class="card highlight">
+        {% if today_entry %}
+            <p>Сегодня уже отмечено</p>
+            <h2>{{ today_entry.emoji }} {{ today_entry.mood_score }}/5</h2>
+            {% if today_entry.can_edit %}
+                <a class="button secondary" href="{% url 'entry_update' today_entry.pk %}">Редактировать сегодня</a>
+            {% else %}
+                <p class="small">Редактирование доступно только 24 часа после создания.</p>
+            {% endif %}
         {% else %}
-            <h2>Нет данных</h2>
+            <p>Сегодня ещё нет записи</p>
+            <h2>2 минуты на check-in</h2>
+            <a class="button primary" href="{% url 'entry_create' %}">Добавить запись</a>
         {% endif %}
     </div>
 
-    <a class="button primary" href="{% url 'entry_create' %}">+ Добавить запись</a>
-    <a class="button secondary" href="{% url 'entry_list' %}">История записей</a>
+    <div class="metric-grid">
+        <div class="card metric">
+            <p>Настроение за 7 дней</p>
+            <h2>{% if weekly_average %}{{ weekly_average }}{% else %}—{% endif %}</h2>
+        </div>
+        <div class="card metric">
+            <p>Стресс</p>
+            <h2>{% if weekly_stress %}{{ weekly_stress }}{% else %}—{% endif %}</h2>
+        </div>
+        <div class="card metric">
+            <p>Сон</p>
+            <h2>{% if weekly_sleep %}{{ weekly_sleep }} ч{% else %}—{% endif %}</h2>
+        </div>
+    </div>
+
+    <div class="actions-row">
+        <a class="button secondary" href="{% url 'entry_list' %}">История</a>
+        <a class="button secondary" href="{% url 'statistics' %}">Аналитика</a>
+        <a class="button secondary" href="{% url 'ai_report' %}">Инсайты</a>
+    </div>
 
     <h2>Последние записи</h2>
 
@@ -27,9 +52,23 @@
             <h3>{{ entry.emoji }} {{ entry.mood_score }}/5</h3>
             <p>Самочувствие: {{ entry.wellbeing_score }}/5</p>
             <p>Активность: {{ entry.activity_score }}/5</p>
+            <p>Стресс: {{ entry.stress_score }}/5 • Тревожность: {{ entry.anxiety_score }}/5</p>
+            {% if entry.sleep_hours %}
+                <p>Сон: {{ entry.sleep_hours }} ч</p>
+            {% endif %}
+            {% if entry.factors %}
+                <p>Факторы: {{ entry.factors }}</p>
+            {% endif %}
+            {% if entry.gratitude %}
+                <p>Благодарность: {{ entry.gratitude }}</p>
+            {% endif %}
             <p>{{ entry.note|default:"Без заметки" }}</p>
 
-            <a href="{% url 'entry_update' entry.pk %}">✎ Редактировать</a>
+            {% if entry.can_edit %}
+                <a href="{% url 'entry_update' entry.pk %}">✎ Редактировать</a>
+            {% else %}
+                <span class="small">Редактирование закрыто</span>
+            {% endif %}
             <a href="{% url 'entry_delete' entry.pk %}">🗑 Удалить</a>
         </article>
     {% empty %}

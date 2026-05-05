@@ -20,6 +20,9 @@
 
     <a class="button secondary" href="{% url 'password_change' %}">Сменить пароль</a>
     <a class="button danger" href="{% url 'delete_account' %}">Удалить аккаунт</a>
-    <a href="{% url 'logout' %}">Выйти</a>
+    <form class="inline-form" method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button class="secondary" type="submit">Выйти</button>
+    </form>
 </section>
 {% endblock %}
