@@ -139,4 +139,4 @@ LOGIN_REDIRECT_URL = "dashboard"
 LOGOUT_REDIRECT_URL = "landing"
 # Email settings for local development
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-DEFAULT_FROM_EMAIL = "Moodee <noreply@moodee.local>"
+DEFAULT_FROM_EMAIL = "Ладно <noreply@ladno.local>"
