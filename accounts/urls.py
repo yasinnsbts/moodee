@@ -4,6 +4,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path('signup/', views.signup_view, name='signup'),
     path("register/", views.register_view, name="register"),
     path(
         "login/",
@@ -23,3 +24,4 @@ urlpatterns = [
     ),
     path("profile/delete/", views.delete_account_view, name="delete_account"),
 ]
+
