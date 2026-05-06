@@ -4,11 +4,11 @@ services:
     container_name: ladno_postgres
     restart: unless-stopped
     environment:
-      POSTGRES_DB: ladno_db
-      POSTGRES_USER: ladno_user
-      POSTGRES_PASSWORD: ladno_password
+      POSTGRES_DB: ${DB_NAME:-ladno_db}
+      POSTGRES_USER: ${DB_USER:-ladno_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-ladno_password}
     ports:
-      - "5433:5432"
+      - "${DB_PORT:-5433}:5432"
     volumes:
       - ladno_postgres_data:/var/lib/postgresql/data
 
