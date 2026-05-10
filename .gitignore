@@ -1,18 +1,31 @@
 # Python
 __pycache__/
 *.py[cod]
+*$py.class
 *.sqlite3
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+coverage.xml
 
 # Virtual env
 .venv/
 venv/
+env/
+ENV/
 
 # Django
 media/
 staticfiles/
+*.log
+local_settings.py
 
 # Env
 .env
+.env.*
+!.env.example
 
 # IDE
 .vscode/
@@ -20,3 +33,7 @@ staticfiles/
 
 # macOS
 .DS_Store
+
+# Windows
+Thumbs.db
+Desktop.ini
