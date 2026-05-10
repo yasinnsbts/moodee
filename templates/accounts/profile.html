@@ -1,25 +1,97 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %}Профиль — Moodee{% endblock %}
+{% block title %}Профиль — Ладно{% endblock %}
 
 {% block content %}
-<section class="screen">
-    <h1>Профиль и настройки</h1>
+<div class="glass-card" style="max-width: 550px;">
+   <div class="logo-area">
+     <div class="logo-icon">
+       <img src="{% static 'images/logo.png' %}" alt="Ладно">
+     </div>
+     <h2>Профиль и настройки</h2>
+     <div class="subhead">Управляйте своими данными</div>
+   </div>
 
-    <div class="card">
-        <h2>{{ request.user.first_name|default:request.user.username }}</h2>
-        <p>{{ request.user.email }}</p>
+  <!-- Информация о пользователе -->
+  <div class="info-card">
+    <h3>{{ request.user.first_name|default:request.user.username }}</h3>
+    <p>{{ request.user.email }}</p>
+  </div>
+
+  <!-- Форма редактирования профиля -->
+  <form method="post" id="profile-form">
+    {% csrf_token %}
+    
+    {% if form.errors %}
+    <div class="messages">
+      {% for field, errors in form.errors.items %}
+        {% for error in errors %}
+          <div class="message">{{ error }}</div>
+        {% endfor %}
+      {% endfor %}
+    </div>
+    {% endif %}
+    
+    {% for field in form %}
+      {% if field.name != 'reminder_time' %}
+        <div class="input-group">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.help_text %}
+            <small class="help-text">{{ field.help_text }}</small>
+          {% endif %}
+        </div>
+      {% endif %}
+    {% endfor %}
+
+    <!-- Блок напоминаний -->
+    <div class="input-group">
+      <label class="checkbox-label">
+        <input type="checkbox" id="reminders-enabled" name="reminders_enabled" {% if user_profile.reminders_enabled %}checked{% endif %}>
+        <span>Напоминания включены</span>
+      </label>
     </div>
 
-    <form class="form" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
+    <div id="reminder-time-group" class="input-group" style="{% if not user_profile.reminders_enabled %}display: none;{% endif %}">
+      <label for="reminder-time">Время напоминаний</label>
+      <input type="time" id="reminder-time" name="reminder_time" class="input-field" value="{{ user_profile.reminder_time|default:'09:00' }}">
+      <small class="help-text">Выберите время, когда вам будет удобно получать напоминания</small>
+    </div>
+    
+    <button type="submit" class="btn-primary">Сохранить настройки</button>
+  </form>
 
-        <button class="primary" type="submit">Сохранить настройки</button>
-    </form>
+  <!-- Кнопки действий -->
+  <div class="profile-actions">
+    <a href="{% url 'password_change' %}" class="btn-secondary">Сменить пароль</a>
+    <a href="{% url 'delete_account' %}" class="btn-danger">Удалить аккаунт</a>
+    <a href="{% url 'logout' %}" class="btn-outline">Выйти</a>
+  </div>
+</div>
+{% endblock %}
 
-    <a class="button secondary" href="{% url 'password_change' %}">Сменить пароль</a>
-    <a class="button danger" href="{% url 'delete_account' %}">Удалить аккаунт</a>
-    <a href="{% url 'logout' %}">Выйти</a>
-</section>
+{% block scripts %}
+<script>
+  // Получаем элементы
+  const remindersCheckbox = document.getElementById('reminders-enabled');
+  const reminderTimeGroup = document.getElementById('reminder-time-group');
+  
+  // Функция для показа/скрытия блока с временем
+  function toggleReminderTime() {
+    if (remindersCheckbox.checked) {
+      reminderTimeGroup.style.display = 'block';
+    } else {
+      reminderTimeGroup.style.display = 'none';
+    }
+  }
+  
+  // Вешаем обработчик на изменение чекбокса
+  if (remindersCheckbox) {
+    remindersCheckbox.addEventListener('change', toggleReminderTime);
+  }
+  
+  // Вызываем функцию при загрузке страницы, чтобы установить правильное состояние
+  toggleReminderTime();
+</script>
 {% endblock %}

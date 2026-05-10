@@ -95,15 +95,3 @@ def profile_view(request):
         form = UserSettingsForm(instance=settings)
 
     return render(request, "accounts/profile.html", {"form": form})
-
-def signup_view(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect('landing')
-    else:
-        form = UserCreationForm()
-    
-    return render(request, 'accounts/signup.html', {'form': form})
