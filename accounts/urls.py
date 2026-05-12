@@ -23,3 +23,4 @@ urlpatterns = [
     ),
     path("profile/delete/", views.delete_account_view, name="delete_account"),
 ]
+
