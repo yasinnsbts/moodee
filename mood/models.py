@@ -108,6 +108,18 @@ class MoodEntry(models.Model):
             models.Index(fields=["user", "date"]),
         ]
 
+    @property
+    def factor_list(self):
+        if not self.factors:
+            return []
+
+        raw_factors = self.factors.replace(";", ",").replace("\n", ",")
+        return [
+            factor.strip()
+            for factor in raw_factors.split(",")
+            if factor.strip()
+        ]
+
     def __str__(self):
         return f"{self.user} — {self.date} — {self.mood_score}/5"
 
