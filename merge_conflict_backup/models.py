@@ -1,7 +1,13 @@
+<<<<<<< HEAD
 from datetime import timedelta
 
 from django.conf import settings
 from django.core.validators import MaxLengthValidator, MinValueValidator, MaxValueValidator
+=======
+from django.conf import settings
+from django.core.validators import MaxLengthValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
+>>>>>>> main
 from django.db import models
 from django.utils import timezone
 
@@ -47,47 +53,50 @@ class MoodEntry(models.Model):
         validators=[MinValueValidator(1), MaxValueValidator(5)],
         default=3,
         verbose_name="Стресс",
-        help_text="Оценка уровня стресса от 1 до 5.",
+        help_text="1 — спокойно, 5 — очень напряжённо",
     )
 
     anxiety_score = models.PositiveSmallIntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(5)],
         default=3,
         verbose_name="Тревожность",
-        help_text="Оценка уровня тревожности от 1 до 5.",
+        help_text="1 — низкая, 5 — высокая",
     )
 
     sleep_hours = models.DecimalField(
-        max_digits=4,
+        max_digits=3,
         decimal_places=1,
         null=True,
         blank=True,
+        validators=[MinValueValidator(0), MaxValueValidator(24)],
         verbose_name="Сон, часов",
-        help_text="Количество часов сна.",
     )
 
-    factors = models.TextField(
+    factors = models.CharField(
+        max_length=255,
         blank=True,
-        max_length=400,
-        validators=[MaxLengthValidator(400)],
-        verbose_name="Факторы",
-        help_text="Что повлияло на состояние. Не более 400 символов.",
+        verbose_name="Факторы дня",
+        help_text="Например: сон, работа, спорт, кофе, общение",
     )
 
-    gratitude = models.TextField(
+    gratitude = models.CharField(
+        max_length=255,
         blank=True,
-        max_length=400,
-        validators=[MaxLengthValidator(400)],
-        verbose_name="Благодарность",
-        help_text="Что хорошего произошло сегодня. Не более 400 символов.",
+        verbose_name="За что благодарны",
     )
 
     note = models.TextField(
         blank=True,
+<<<<<<< HEAD
         max_length=400,
         validators=[MaxLengthValidator(400)],
         verbose_name="Заметка",
         help_text="Не более 400 символов.",
+=======
+        validators=[MaxLengthValidator(400)],
+        verbose_name="Заметка",
+        help_text="До 400 символов",
+>>>>>>> main
     )
 
     created_at = models.DateTimeField(
@@ -107,17 +116,11 @@ class MoodEntry(models.Model):
         indexes = [
             models.Index(fields=["user", "date"]),
         ]
-
-    @property
-    def factor_list(self):
-        if not self.factors:
-            return []
-
-        raw_factors = self.factors.replace(";", ",").replace("\n", ",")
-        return [
-            factor.strip()
-            for factor in raw_factors.split(",")
-            if factor.strip()
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "date"],
+                name="unique_mood_entry_per_user_date",
+            ),
         ]
 
     def __str__(self):
@@ -134,6 +137,7 @@ class MoodEntry(models.Model):
         }.get(self.mood_score, "😐")
 
     @property
+<<<<<<< HEAD
     def edit_deadline(self):
         return self.created_at + timedelta(hours=24)
 
@@ -143,3 +147,15 @@ class MoodEntry(models.Model):
             return True
 
         return timezone.now() <= self.edit_deadline
+=======
+    def factor_list(self):
+        return [
+            factor.strip()
+            for factor in self.factors.split(",")
+            if factor.strip()
+        ]
+
+    @property
+    def can_edit(self):
+        return timezone.now() <= self.created_at + timezone.timedelta(hours=24)
+>>>>>>> main

@@ -1,5 +1,4 @@
 from django import forms
-from django.core.exceptions import ValidationError
 
 from .models import MoodEntry
 
@@ -26,49 +25,55 @@ class MoodEntryForm(forms.ModelForm):
             "activity_score": forms.NumberInput(attrs={"min": 1, "max": 5}),
             "stress_score": forms.NumberInput(attrs={"min": 1, "max": 5}),
             "anxiety_score": forms.NumberInput(attrs={"min": 1, "max": 5}),
-            "sleep_hours": forms.NumberInput(
+            "sleep_hours": forms.NumberInput(attrs={"min": 0, "max": 24, "step": 0.5}),
+            "factors": forms.Textarea(
                 attrs={
-                    "min": 0,
-                    "max": 24,
-                    "step": "0.5",
-                    "placeholder": "Например: 7.5",
+                    "rows": 3,
+                    "maxlength": 400,
+                    "placeholder": "Что повлияло на состояние? До 400 символов.",
                 }
             ),
-            "factors": forms.TextInput(
+            "gratitude": forms.Textarea(
                 attrs={
-                    "placeholder": "сон, работа, прогулка, кофе",
-                }
-            ),
-            "gratitude": forms.TextInput(
-                attrs={
-                    "placeholder": "Одна хорошая вещь за день",
+                    "rows": 3,
+                    "maxlength": 400,
+                    "placeholder": "Что хорошего произошло сегодня? До 400 символов.",
                 }
             ),
             "note": forms.Textarea(
                 attrs={
                     "rows": 4,
                     "maxlength": 400,
-                    "placeholder": "Что повлияло на настроение?",
+                    "placeholder": "Короткая заметка. До 400 символов.",
                 }
             ),
         }
+        help_texts = {
+            "factors": "Максимум 400 символов.",
+            "gratitude": "Максимум 400 символов.",
+            "note": "Максимум 400 символов.",
+        }
 
-    def __init__(self, *args, user=None, **kwargs):
-        self.user = user
-        super().__init__(*args, **kwargs)
+    def clean_factors(self):
+        factors = self.cleaned_data.get("factors", "")
 
-    def clean_date(self):
-        date = self.cleaned_data["date"]
+        if len(factors) > 400:
+            raise forms.ValidationError("Поле факторов не должно превышать 400 символов.")
 
-        if not self.user:
-            return date
+        return factors
 
-        duplicate_exists = MoodEntry.objects.filter(
-            user=self.user,
-            date=date,
-        ).exclude(pk=self.instance.pk).exists()
+    def clean_gratitude(self):
+        gratitude = self.cleaned_data.get("gratitude", "")
 
-        if duplicate_exists:
-            raise ValidationError("На эту дату уже есть запись. Откройте её из истории и отредактируйте.")
+        if len(gratitude) > 400:
+            raise forms.ValidationError("Поле благодарности не должно превышать 400 символов.")
 
-        return date
+        return gratitude
+
+    def clean_note(self):
+        note = self.cleaned_data.get("note", "")
+
+        if len(note) > 400:
+            raise forms.ValidationError("Заметка не должна превышать 400 символов.")
+
+        return note
