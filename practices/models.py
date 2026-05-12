@@ -1,8 +1,5 @@
 from django.db import models
 
-# Create your models here.
-from django.db import models
-
 
 class BreathingPractice(models.Model):
     title = models.CharField(

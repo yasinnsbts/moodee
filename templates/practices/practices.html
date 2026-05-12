@@ -10,11 +10,13 @@
     {% for practice in practices %}
         <article class="card">
             <h2>{{ practice.title }}</h2>
-            <p>{{ practice.cycles }} цикла • {{ practice.duration_minutes }} минуты</p>
+            <p>{{ practice.cycles }} цикла • {{ practice.duration_minutes }} мин.</p>
             <p>{{ practice.description }}</p>
+
             {% if practice.instruction %}
                 <p>{{ practice.instruction }}</p>
             {% endif %}
+
             <button class="primary" type="button">Выполнить</button>
         </article>
     {% empty %}
@@ -24,8 +26,8 @@
     {% endfor %}
 
     <div class="card">
-        <h2>Персональные инсайты</h2>
-        <p>Ладно сравнит настроение, сон, активность, стресс и факторы дня за последнюю неделю.</p>
+        <h2>Рекомендация</h2>
+        <p>Если настроение снижено или ощущается напряжение, попробуйте короткую дыхательную практику вечером.</p>
         <a class="button secondary" href="{% url 'ai_report' %}">Получить анализ недели</a>
     </div>
 </section>

@@ -175,3 +175,41 @@ DEFAULT_FROM_EMAIL = os.getenv(
 )
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
+
+# Local/demo host settings
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "0.0.0.0",
+    "testserver",
+    ".github.dev",
+    ".app.github.dev",
+    ".preview.app.github.dev",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+    "https://*.github.dev",
+    "https://*.app.github.dev",
+    "https://*.preview.app.github.dev",
+]
+
+# Local/demo host settings
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "0.0.0.0",
+    "testserver",
+    ".github.dev",
+    ".app.github.dev",
+    ".preview.app.github.dev",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+    "https://*.github.dev",
+    "https://*.app.github.dev",
+    "https://*.preview.app.github.dev",
+]
