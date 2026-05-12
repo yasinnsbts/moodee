@@ -28,17 +28,31 @@ SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-fallback-key")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = [
-    host.strip()
-    for host in os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
-    if host.strip()
-]
+DEFAULT_ALLOWED_HOSTS = "localhost,127.0.0.1,.app.github.dev,.githubpreview.dev"
+DEFAULT_CSRF_TRUSTED_ORIGINS = (
+    "https://*.app.github.dev,https://*.githubpreview.dev"
+)
 
-CSRF_TRUSTED_ORIGINS = [
-    origin.strip()
-    for origin in os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",")
-    if origin.strip()
-]
+
+def get_csv_env(name, default):
+    values = [
+        item.strip()
+        for item in os.getenv(name, default).split(",")
+        if item.strip()
+    ]
+    return values or [
+        item.strip()
+        for item in default.split(",")
+        if item.strip()
+    ]
+
+
+ALLOWED_HOSTS = get_csv_env("ALLOWED_HOSTS", DEFAULT_ALLOWED_HOSTS)
+
+CSRF_TRUSTED_ORIGINS = get_csv_env(
+    "CSRF_TRUSTED_ORIGINS",
+    DEFAULT_CSRF_TRUSTED_ORIGINS,
+)
 
 
 # Application definition
@@ -101,7 +115,7 @@ DATABASES = {
         "USER": os.getenv("DB_USER", "ladno_user"),
         "PASSWORD": os.getenv("DB_PASSWORD", "ladno_password"),
         "HOST": os.getenv("DB_HOST", "localhost"),
-        "PORT": os.getenv("DB_PORT", "5432"),
+        "PORT": os.getenv("DB_PORT", "5433"),
     }
 }
 
