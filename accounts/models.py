@@ -4,7 +4,6 @@ from django.db import models
 from django.conf import settings
 from django.db import models
 
-
 class UserSettings(models.Model):
     class ThemeChoices(models.TextChoices):
         LIGHT = "light", "Светлая"

@@ -1,127 +1,510 @@
+/* ========================================
+   1. GLOBAL RESET & BASE
+   ======================================== */
 * {
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-    margin: 0;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background: #f5f1ea;
-    color: #2d2a26;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: linear-gradient(165deg, #B5D8E8 0%, #8FC1D4 50%, #6BA8C0 100%);
+  min-height: 100vh;
 }
 
-.app {
-    max-width: 430px;
-    min-height: 100vh;
-    margin: 0 auto;
-    padding: 24px 20px 90px;
-    background: #faf7f0;
+.auth-container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem;
 }
 
-.screen {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+/* ========================================
+   2. AUTH WRAPPER
+   ======================================== */
+.auth-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 500px;
 }
 
-.logo {
-    font-size: 48px;
-    text-align: center;
+/* ========================================
+   3. TYPOGRAPHY
+   ======================================== */
+h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #2D6A4F 0%, #40916C 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 0.5rem;
 }
 
-h1,
-h2,
-h3 {
-    margin: 0;
+.subhead {
+  color: #6B8F7F;
+  font-size: 0.9rem;
 }
 
-.button,
-button {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    padding: 14px 18px;
-    border-radius: 16px;
-    border: none;
-    text-decoration: none;
-    font-weight: 600;
-    cursor: pointer;
+/* ========================================
+   4. COMPONENTS - GLASS CARD
+   ======================================== */
+.glass-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(2px);
+  border-radius: 2rem;
+  padding: 2rem;
+  width: 100%;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  animation: gentleFade 0.6s ease-out;
 }
 
-.primary {
-    background: #6f8f72;
-    color: white;
+.danger-card {
+  border-top: 4px solid #e74c3c;
 }
 
-.secondary {
-    background: #e7ddcf;
-    color: #2d2a26;
+.logo-area {
+  text-align: center;
+  margin-bottom: 1.5rem;
 }
 
-.danger {
-    background: #c45b5b;
-    color: white;
+.logo-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #FFE0B5 0%, #FFD6A5 100%);
+  width: 64px;
+  height: 64px;
+  border-radius: 70px;
+  margin-bottom: 1rem;
+  box-shadow: 0 8px 20px -8px rgba(255, 160, 80, 0.3);
 }
 
-.card {
-    padding: 16px;
-    border-radius: 20px;
-    background: white;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+.logo-icon.small {
+  width: 48px;
+  height: 48px;
 }
 
-.bottom-nav {
-    position: fixed;
-    left: 50%;
-    bottom: 0;
-    transform: translateX(-50%);
-    width: 100%;
-    max-width: 430px;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    background: #fffaf2;
-    border-top: 1px solid #eadfce;
+.logo-icon img {
+  width: 70px;
+  height: 70px;
 }
 
-.bottom-nav a {
-    padding: 10px 4px;
-    text-align: center;
-    color: #2d2a26;
-    text-decoration: none;
-    font-size: 13px;
+.logo-icon.small img {
+  width: 28px;
+  height: 28px;
 }
 
-.bottom-nav span {
-    display: block;
-    margin-top: 4px;
+/* ========================================
+   5. FORMS & INPUTS
+   ======================================== */
+.input-group {
+  margin-bottom: 1.25rem;
 }
 
-input,
-textarea,
-select {
-    width: 100%;
-    padding: 12px 14px;
-    border-radius: 12px;
-    border: 1px solid #d8cfc0;
-    font: inherit;
+label {
+  display: block;
+  font-weight: 500;
+  font-size: 0.85rem;
+  color: #2D6A4F;
+  margin-bottom: 0.4rem;
 }
 
-.form {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
+.input-field,
+.input-group input,
+.input-group input[type="text"],
+.input-group input[type="email"],
+.input-group input[type="password"] {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border-radius: 1.5rem;
+  border: 1px solid #DCE3EC;
+  background: white;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  transition: all 0.2s;
 }
 
-.small {
-    font-size: 13px;
-    opacity: 0.7;
+.input-field:focus,
+.input-group input:focus {
+  outline: none;
+  border-color: #4A9E86;
+  box-shadow: 0 0 0 3px rgba(74, 158, 134, 0.2);
+}
+
+.help-text {
+  display: block;
+  font-size: 0.7rem;
+  color: #7C9E8E;
+  margin-top: 0.3rem;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  font-weight: 500;
+  color: #2D6A4F;
+  margin-bottom: 0;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: #4A9E86;
+}
+
+.checkbox-label span {
+  user-select: none;
+}
+
+/* ========================================
+   6. BUTTONS
+   ======================================== */
+.btn-primary {
+  width: 100%;
+  display: block;
+  text-align: center;
+  background: linear-gradient(135deg, #FF9F66 0%, #FF7E40 100%);
+  color: white;
+  border: none;
+  padding: 0.9rem;
+  border-radius: 2rem;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px -5px #FF9F66;
+  text-decoration: none;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #FF7E40 0%, #FF6B2C 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px -8px #FF9F66;
+}
+
+.btn-secondary {
+  display: block;
+  background: transparent;
+  color: #4A9E86;
+  border: 2px solid #4A9E86;
+  padding: 0.9rem;
+  border-radius: 2rem;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background: rgba(74, 158, 134, 0.1);
+  transform: translateY(-2px);
+}
+
+.btn-danger {
+  display: block;
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  color: white;
+  border: none;
+  padding: 0.9rem;
+  border-radius: 2rem;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.btn-danger:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px -5px #e74c3c;
+}
+
+.btn-outline {
+  display: block;
+  background: transparent;
+  color: #7C9E8E;
+  border: 1px solid #DCE3EC;
+  padding: 0.9rem;
+  border-radius: 2rem;
+  font-weight: 500;
+  font-size: 1rem;
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.btn-outline:hover {
+  background: rgba(124, 158, 142, 0.1);
+}
+
+/* ========================================
+   7. PROFILE SPECIFIC
+   ======================================== */
+.info-card {
+  background: #f8fafd;
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.info-card h3 {
+  margin: 0 0 0.3rem 0;
+  color: #2D6A4F;
+}
+
+.info-card p {
+  margin: 0;
+  color: #6B8F7F;
+}
+
+.profile-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-top: 1.5rem;
+}
+
+/* ========================================
+   8. DELETE ACCOUNT SPECIFIC
+   ======================================== */
+.warning-message {
+  background: #fff5f5;
+  border-left: 4px solid #e74c3c;
+  padding: 1rem;
+  border-radius: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.warning-message p {
+  color: #c0392b;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.warning-message ul {
+  margin-left: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: #555;
+}
+
+.button-group-danger {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+/* ========================================
+   9. UTILITIES & MESSAGES
+   ======================================== */
+.flex-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.75rem;
+  font-size: 0.85rem;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #4A9E86;
+}
+
+.forgot-link {
+  color: #FF9F66;
+  text-decoration: none;
+}
+
+.forgot-link:hover {
+  text-decoration: underline;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 2rem 0 1.5rem;
+  color: #A8C4B6;
+  font-size: 0.8rem;
+}
+
+.divider-line {
+  flex: 1;
+  height: 1px;
+  background: #DCE3EC;
+}
+
+.social-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.social-btn {
+  flex: 1;
+  background: white;
+  border: 1px solid #DCE3EC;
+  padding: 0.7rem;
+  border-radius: 2rem;
+  font-weight: 500;
+  color: #2D6A4F;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.footer-action {
+  text-align: center;
+  margin-top: 1.8rem;
+  font-size: 0.9rem;
+  color: #7C9E8E;
+}
+
+.footer-action a {
+  color: #FF9F66;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.footer-action a:hover {
+  text-decoration: underline;
 }
 
 .messages {
-    margin-bottom: 16px;
+  margin-bottom: 1rem;
 }
 
 .message {
-    padding: 12px;
-    border-radius: 12px;
-    background: #e7ddcf;
+  background: #FFE8E8;
+  color: #D9534F;
+  padding: 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+
+/* ========================================
+   10. BOTTOM NAVIGATION
+   ======================================== */
+.bottom-nav {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  border-radius: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0.6rem 1rem;
+  margin-top: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+.bottom-nav a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  text-decoration: none;
+  padding: 0.5rem 0.8rem;
+  border-radius: 1.5rem;
+  transition: all 0.2s ease;
+  flex: 1;
+}
+
+.nav-icon {
+  font-size: 1.4rem;
+  line-height: 1;
+  color: #7C9E8E;
+  transition: all 0.2s ease;
+}
+
+.nav-text {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: #7C9E8E;
+  transition: all 0.2s ease;
+}
+
+.bottom-nav a:hover {
+  background: rgba(255, 159, 102, 0.1);
+  transform: translateY(-2px);
+}
+
+.bottom-nav a:hover .nav-icon,
+.bottom-nav a:hover .nav-text {
+  color: #FF9F66;
+}
+
+.bottom-nav a.active .nav-icon,
+.bottom-nav a.active .nav-text {
+  color: #FF9F66;
+  font-weight: 600;
+}
+
+.bottom-nav a.active {
+  background: rgba(255, 159, 102, 0.15);
+}
+
+/* ========================================
+   11. ANIMATIONS
+   ======================================== */
+@keyframes gentleFade {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========================================
+   12. RESPONSIVE
+   ======================================== */
+@media (max-width: 480px) {
+  .auth-wrapper {
+    max-width: 100%;
+  }
+  
+  .glass-card {
+    padding: 1.5rem;
+    border-radius: 1.5rem;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+  }
+  
+  .bottom-nav {
+    padding: 0.5rem 0.8rem;
+    border-radius: 1.5rem;
+    margin-top: 0.8rem;
+  }
+  
+  .nav-icon {
+    font-size: 1.2rem;
+  }
+  
+  .nav-text {
+    font-size: 0.65rem;
+  }
+  
+  .bottom-nav a {
+    padding: 0.3rem 0.5rem;
+  }
 }

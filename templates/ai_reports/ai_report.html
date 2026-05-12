@@ -21,6 +21,18 @@
         {% if average_activity %}
             <p>Средняя активность: {{ average_activity }} / 5</p>
         {% endif %}
+
+        {% if average_stress %}
+            <p>Средний стресс: {{ average_stress }} / 5</p>
+        {% endif %}
+
+        {% if average_anxiety %}
+            <p>Средняя тревожность: {{ average_anxiety }} / 5</p>
+        {% endif %}
+
+        {% if average_sleep %}
+            <p>Средний сон: {{ average_sleep }} ч</p>
+        {% endif %}
     </div>
 
     <div class="card">
@@ -32,11 +44,12 @@
             {% endfor %}
         </ul>
 
-        <p><strong>Рекомендация:</strong> {{ recommendation }}</p>
+        <p><strong>Следующий шаг:</strong> {{ recommendation }}</p>
     </div>
 
     <p class="small">
-        Это не медицинская рекомендация. Анализ основан только на ваших записях в дневнике.
+        Это не диагноз и не медицинская рекомендация. Анализ основан только на ваших записях в дневнике.
+        Если вы чувствуете риск навредить себе или другому человеку, обратитесь в экстренную службу или к специалисту.
     </p>
 
     <a class="button secondary" href="{% url 'practices' %}">Вернуться к практикам</a>

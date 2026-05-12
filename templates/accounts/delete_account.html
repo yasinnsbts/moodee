@@ -1,16 +1,40 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Удаление аккаунта — Ладно{% endblock %}
 
 {% block content %}
-<section class="screen">
-    <h1>Удаление аккаунта</h1>
-    <p>Удаление аккаунта безвозвратно. Продолжить?</p>
+<div class="glass-card danger-card">
+  <div class="logo-area">
+    <div class="logo-icon">
+      <img src="{% static 'images/logo.png' %}" alt="Ладно">
+    </div>
+    <h2>Удаление аккаунта</h2>
+    <div class="subhead">Это действие необратимо</div>
+  </div>
 
-    <form method="post">
-        {% csrf_token %}
-        <button class="danger" type="submit">Да, удалить</button>
-        <a class="button secondary" href="{% url 'profile' %}">Отмена</a>
-    </form>
-</section>
+  <div class="warning-message">
+    <p><strong>Внимание!</strong> Вы собираетесь навсегда удалить свой аккаунт и все связанные с ним данные:</p>
+    <ul>
+      <li>Историю настроений</li>
+      <li>Заметки и практики</li>
+      <li>Личные настройки</li>
+    </ul>
+    <p>Это действие <strong>нельзя будет отменить</strong>.</p>
+  </div>
+
+  <form method="post">
+    {% csrf_token %}
+    
+    <div class="input-group">
+      <label for="confirm_text">Введите <strong>УДАЛИТЬ</strong> для подтверждения</label>
+      <input class="input-field" type="text" id="confirm_text" name="confirm_text" placeholder="УДАЛИТЬ" required>
+    </div>
+    
+    <div class="button-group-danger">
+      <button type="submit" class="btn-danger">Да, удалить мой аккаунт</button>
+      <a href="{% url 'profile' %}" class="btn-secondary">Отмена</a>
+    </div>
+  </form>
+</div>
 {% endblock %}

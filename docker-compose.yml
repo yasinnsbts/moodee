@@ -1,16 +1,16 @@
 services:
   db:
     image: postgres:16-alpine
-    container_name: moodee_postgres
+    container_name: ladno_postgres
     restart: unless-stopped
     environment:
-      POSTGRES_DB: moodee_db
-      POSTGRES_USER: moodee_user
-      POSTGRES_PASSWORD: moodee_password
+      POSTGRES_DB: ${DB_NAME:-ladno_db}
+      POSTGRES_USER: ${DB_USER:-ladno_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-ladno_password}
     ports:
-      - "5432:5432"
+      - "${DB_PORT:-5433}:5432"
     volumes:
-      - moodee_postgres_data:/var/lib/postgresql/data
+      - ladno_postgres_data:/var/lib/postgresql/data
 
 volumes:
-  moodee_postgres_data:
+  ladno_postgres_data:

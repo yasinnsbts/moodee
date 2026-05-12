@@ -1,8 +1,10 @@
 from datetime import timedelta
+import csv
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Avg
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
@@ -59,6 +61,64 @@ def entry_list_view(request):
     }
 
     return render(request, "mood/entry_list.html", context)
+
+
+@login_required
+def entry_export_view(request):
+    entries = MoodEntry.objects.filter(
+        user=request.user,
+    ).order_by("-date", "-created_at")
+
+    start_date = request.GET.get("start_date")
+    end_date = request.GET.get("end_date")
+    mood_score = request.GET.get("mood_score")
+
+    if start_date:
+        entries = entries.filter(date__gte=start_date)
+
+    if end_date:
+        entries = entries.filter(date__lte=end_date)
+
+    if mood_score:
+        entries = entries.filter(mood_score=mood_score)
+
+    response = HttpResponse(content_type="text/csv; charset=utf-8")
+    response["Content-Disposition"] = 'attachment; filename="ladno_mood_entries.csv"'
+    response.write("\ufeff")
+
+    writer = csv.writer(response)
+    writer.writerow([
+        "date",
+        "mood_score",
+        "wellbeing_score",
+        "activity_score",
+        "stress_score",
+        "anxiety_score",
+        "sleep_hours",
+        "factors",
+        "gratitude",
+        "note",
+        "created_at",
+        "updated_at",
+    ])
+
+    for entry in entries:
+        writer.writerow([
+            entry.date,
+            entry.mood_score,
+            entry.wellbeing_score,
+            entry.activity_score,
+            entry.stress_score,
+            entry.anxiety_score,
+            entry.sleep_hours,
+            entry.factors,
+            entry.gratitude,
+            entry.note,
+            entry.created_at,
+            entry.updated_at,
+        ])
+
+    return response
 
 
 @login_required

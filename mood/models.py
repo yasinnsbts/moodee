@@ -43,6 +43,45 @@ class MoodEntry(models.Model):
         verbose_name="Активность",
     )
 
+    stress_score = models.PositiveSmallIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(5)],
+        default=3,
+        verbose_name="Стресс",
+        help_text="Оценка уровня стресса от 1 до 5.",
+    )
+
+    anxiety_score = models.PositiveSmallIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(5)],
+        default=3,
+        verbose_name="Тревожность",
+        help_text="Оценка уровня тревожности от 1 до 5.",
+    )
+
+    sleep_hours = models.DecimalField(
+        max_digits=4,
+        decimal_places=1,
+        null=True,
+        blank=True,
+        verbose_name="Сон, часов",
+        help_text="Количество часов сна.",
+    )
+
+    factors = models.TextField(
+        blank=True,
+        max_length=400,
+        validators=[MaxLengthValidator(400)],
+        verbose_name="Факторы",
+        help_text="Что повлияло на состояние. Не более 400 символов.",
+    )
+
+    gratitude = models.TextField(
+        blank=True,
+        max_length=400,
+        validators=[MaxLengthValidator(400)],
+        verbose_name="Благодарность",
+        help_text="Что хорошего произошло сегодня. Не более 400 символов.",
+    )
+
     note = models.TextField(
         blank=True,
         max_length=400,
