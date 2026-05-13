@@ -1,25 +1,106 @@
 {% extends "base.html" %}
+{% load static %}
+{% block page_class %}ai-report{% endblock %}
 
 {% block title %}Анализ недели — Ладно{% endblock %}
 
 {% block content %}
-<section class="screen">
-    <h1>Анализ вашего настроения за неделю</h1>
+<div class="app">
+<section class="screen ai-report-screen">
+    <div class="dashboard-hero ai-report-hero">
+        <div>
+            <p class="eyebrow">AI-анализ</p>
+            <h1>Анализ недели</h1>
+            <p class="hero-text">
+                Ладно собрал ваши записи за неделю и выделил основные закономерности:
+                настроение, сон, активность, стресс и тревожность.
+            </p>
+        </div>
 
-    <div class="card">
-        <p>Период: {{ period_start }} — {{ period_end }}</p>
-        <p>Количество записей: {{ entries_count }}</p>
+        <div class="hero-badge" aria-hidden="true">
+            <span>💡</span>
+        </div>
+    </div>
 
+    <div class="card ai-period-card">
+        <div class="summary-item">
+            <span class="summary-label">Период</span>
+            <strong>{{ period_start }} — {{ period_end }}</strong>
+        </div>
+
+        <div class="summary-item">
+            <span class="summary-label">Количество записей</span>
+            <strong>{{ entries_count }}</strong>
+        </div>
+    </div>
+
+    <div class="ai-section-heading">
+        <div>
+            <p class="eyebrow ai-eyebrow">Обзор</p>
+            <h2>Средние показатели</h2>
+            <p class="ai-heading-text">
+                Эти значения помогают быстро оценить общее состояние за выбранную неделю.
+            </p>
+        </div>
+
+        <div class="journal-badge" aria-hidden="true">
+            <span>📌</span>
+        </div>
+    </div>
+
+    <div class="metric-grid ai-metric-grid">
         {% if average %}
-            <p>Среднее настроение: {{ average }} / 5</p>
+            <div class="card metric">
+                <p>Настроение</p>
+                <h2>{{ average }}</h2>
+            </div>
         {% endif %}
 
         {% if average_wellbeing %}
-            <p>Среднее самочувствие: {{ average_wellbeing }} / 5</p>
+            <div class="card metric">
+                <p>Самочувствие</p>
+                <h2>{{ average_wellbeing }}</h2>
+            </div>
         {% endif %}
 
         {% if average_activity %}
-            <p>Средняя активность: {{ average_activity }} / 5</p>
+            <div class="card metric">
+                <p>Активность</p>
+                <h2>{{ average_activity }}</h2>
+            </div>
+        {% endif %}
+
+        {% if average_stress %}
+            <div class="card metric">
+                <p>Стресс</p>
+                <h2>{{ average_stress }}</h2>
+            </div>
+        {% endif %}
+
+        {% if average_anxiety %}
+            <div class="card metric">
+                <p>Тревожность</p>
+                <h2>{{ average_anxiety }}</h2>
+            </div>
+        {% endif %}
+
+        {% if average_sleep %}
+            <div class="card metric">
+                <p>Сон</p>
+                <h2>{{ average_sleep }} ч</h2>
+            </div>
+        {% endif %}
+
+        {% if average_stress %}
+            <p>Средний стресс: {{ average_stress }} / 5</p>
+        {% endif %}
+
+        {% if average_anxiety %}
+            <p>Средняя тревожность: {{ average_anxiety }} / 5</p>
+        {% endif %}
+
+        {% if average_sleep %}
+            <p>Средний сон: {{ average_sleep }} ч</p>
         {% endif %}
 
         {% if average_stress %}
@@ -35,23 +116,58 @@
         {% endif %}
     </div>
 
-    <div class="card">
-        <h2>Ключевые инсайты</h2>
+    <div class="card ai-insights-card">
+        <div class="card-heading">
+            <div>
+                <p class="eyebrow">Инсайты</p>
+                <h2>Ключевые наблюдения</h2>
+            </div>
+            <p>
+                Ниже — основные выводы на основе ваших записей. Они не являются диагнозом,
+                а только помогают заметить повторяющиеся паттерны.
+            </p>
+        </div>
 
-        <ul>
+        <div class="ai-insight-list">
             {% for insight in insights %}
-                <li>{{ insight }}</li>
+                <div class="ai-insight-item">
+                    <span class="ai-insight-icon" aria-hidden="true">✓</span>
+                    <p>{{ insight }}</p>
+                </div>
+            {% empty %}
+                <div class="empty-state">
+                    <p>Пока недостаточно данных для инсайтов. Добавьте больше записей в дневник.</p>
+                </div>
             {% endfor %}
-        </ul>
-
-        <p><strong>Следующий шаг:</strong> {{ recommendation }}</p>
+        </div>
     </div>
 
-    <p class="small">
-        Это не диагноз и не медицинская рекомендация. Анализ основан только на ваших записях в дневнике.
-        Если вы чувствуете риск навредить себе или другому человеку, обратитесь в экстренную службу или к специалисту.
-    </p>
+    <div class="card ai-recommendation-card">
+        <div class="ai-recommendation-content">
+            <div class="practice-icon ai-recommendation-icon" aria-hidden="true">
+                <span>🎯</span>
+            </div>
 
-    <a class="button secondary" href="{% url 'dashboard' %}">Вернуться на главную</a>
+            <div>
+                <p class="eyebrow">Следующий шаг</p>
+                <h2>Рекомендация на неделю</h2>
+                <p>{{ recommendation }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="ai-disclaimer">
+        <div class="ai-disclaimer-icon" aria-hidden="true">!</div>
+        <p>
+            Это не диагноз и не медицинская рекомендация. Анализ основан только на ваших
+            записях в дневнике. Если вы чувствуете риск навредить себе или другому человеку,
+            обратитесь в экстренную службу или к специалисту.
+        </p>
+    </div>
+
+    <a class="button secondary ai-back-button" href="{% url 'practices' %}">
+        Вернуться к практикам
+    </a>
 </section>
+</div>
 {% endblock %}

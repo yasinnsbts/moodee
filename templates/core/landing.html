@@ -1,29 +1,32 @@
 {% extends "base.html" %}
 {% load static %}
-
 {% block title %}Ладно — Дневник настроений{% endblock %}
 
 {% block content %}
-<div class="glass-card" style="text-align: center;">
-  <div class="logo-area">
-    <div class="logo-icon" style="width: 100px; height: 100px;">
-      <img src="{% static 'images/logo.png' %}" alt="Ладно" style="width: 80px; height: 80px;">
+<div class="auth-container">
+    <div class="auth-wrapper">
+        <div class="glass-card" style="text-align: center;">
+            <div class="logo-area">
+                <div class="logo-icon" style="width: 100px; height: 100px;">
+                    <img src="{% static 'images/logo.png' %}" alt="Ладно" style="width: 80px; height: 80px;">
+                </div>
+            </div>
+            
+            <h2 style="font-size: 3rem; margin-bottom: 0.5rem;">Ладно</h2>
+            <p class="subhead" style="font-size: 1.1rem;">Дневник настроений</p>
+            <p style="font-size: 0.9rem; color: #7C9E8E; margin-top: 1rem;">
+                Отмечайте эмоции, ищите паттерны и получайте мягкие рекомендации от ИИ.
+            </p>
+            
+            <div style="display: flex; flex-direction: column; gap: 1rem; width: 100%; margin: 2rem 0;">
+                <a href="{% url 'login' %}" class="btn-primary">Войти</a>
+                <a href="{% url 'register' %}" class="btn-secondary">Зарегистрироваться</a>
+            </div>
+            
+            <p style="font-size: 0.75rem; color: #A8C4B6; margin-top: 1rem;">
+                mood tracking • self care • AI insights
+            </p>
+        </div>
     </div>
-  </div>
-  
-  <h2 style="font-size: 3rem; margin-bottom: 0.5rem;">Ладно</h2>
-  <p class="subhead" style="font-size: 1.1rem;">Дневник настроений</p>
-  <p style="font-size: 0.9rem; color: #7C9E8E; margin-top: 1rem;">
-    Отмечайте эмоции, ищите паттерны и получайте мягкие рекомендации от ИИ.
-  </p>
-  
-  <div style="display: flex; flex-direction: column; gap: 1rem; width: 100%; margin: 2rem 0;">
-    <a href="{% url 'login' %}" class="btn-primary">Войти</a>
-    <a href="{% url 'register' %}" class="btn-secondary">Зарегистрироваться</a>
-  </div>
-  
-  <p style="font-size: 0.75rem; color: #A8C4B6; margin-top: 1rem;">
-    mood tracking • self care • AI insights
-  </p>
 </div>
 {% endblock %}

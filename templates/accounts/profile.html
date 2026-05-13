@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 {% load static %}
+{% block page_class %}profile-settings{% endblock %}
 
 {% block title %}Профиль — Ладно{% endblock %}
 
 {% block content %}
-<div class="glass-card" style="max-width: 550px;">
+<div class="app">
+<div class="glass-card" style="max-width: 550px; margin: 0 auto;">
    <div class="logo-area">
      <div class="logo-icon">
        <img src="{% static 'images/logo.png' %}" alt="Ладно">
@@ -33,30 +35,51 @@
     </div>
     {% endif %}
     
-    {% for field in form %}
-      {% if field.name != 'reminder_time' %}
-        <div class="input-group">
-          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-          {{ field }}
-          {% if field.help_text %}
-            <small class="help-text">{{ field.help_text }}</small>
-          {% endif %}
-        </div>
-      {% endif %}
-    {% endfor %}
+    <!-- КРАСИВЫЙ БЛОК НАСТРОЕК (три переключателя) -->
+    <div class="settings-block">
+      <!-- 1. Напоминания (reminder_enabled) -->
+      <div class="setting-item">
+        <label class="setting-toggle">
+          <input type="checkbox" id="reminder-enabled" name="reminder_enabled" {% if user_profile.reminder_enabled %}checked{% endif %}>
+          <span class="toggle-slider"></span>
+          <div class="toggle-info">
+            <span class="toggle-label">Напоминания</span>
+            <span class="toggle-description">Ежедневные уведомления о check-in</span>
+          </div>
+        </label>
+      </div>
 
-    <!-- Блок напоминаний -->
-    <div class="input-group">
-      <label class="checkbox-label">
-        <input type="checkbox" id="reminders-enabled" name="reminders_enabled" {% if user_profile.reminders_enabled %}checked{% endif %}>
-        <span>Напоминания включены</span>
-      </label>
-    </div>
+      <!-- Время напоминаний (показывается только если включено) -->
+      <div id="reminder-time-group" class="reminder-time-settings" style="{% if not user_profile.reminder_enabled %}display: none;{% endif %}">
+        <label for="reminder_time">Время напоминаний</label>
+        <input type="time" id="reminder_time" name="reminder_time" class="input-field" value="{{ user_profile.reminder_time|default:'09:00' }}">
+        <small class="help-text">Выберите удобное время</small>
+      </div>
 
-    <div id="reminder-time-group" class="input-group" style="{% if not user_profile.reminders_enabled %}display: none;{% endif %}">
-      <label for="reminder-time">Время напоминаний</label>
-      <input type="time" id="reminder-time" name="reminder_time" class="input-field" value="{{ user_profile.reminder_time|default:'09:00' }}">
-      <small class="help-text">Выберите время, когда вам будет удобно получать напоминания</small>
+      <!-- 2. Тёмная тема (theme) -->
+      <div class="setting-item">
+        <label class="setting-toggle">
+          <input type="checkbox" id="dark-theme" name="theme_dark" {% if user_profile.theme == 'dark' %}checked{% endif %}>
+          <span class="toggle-slider"></span>
+          <div class="toggle-info">
+            <span class="toggle-label">Тёмная тема</span>
+            <span class="toggle-description">Тёмное оформление интерфейса</span>
+          </div>
+        </label>
+        <input type="hidden" name="theme" id="theme-input" value="{{ user_profile.theme }}">
+      </div>
+
+      <!-- 3. AI-анализ (ai_analysis_enabled) -->
+      <div class="setting-item">
+        <label class="setting-toggle">
+          <input type="checkbox" id="ai-enabled" name="ai_analysis_enabled" {% if user_profile.ai_analysis_enabled %}checked{% endif %}>
+          <span class="toggle-slider"></span>
+          <div class="toggle-info">
+            <span class="toggle-label">AI-анализ</span>
+            <span class="toggle-description">Персональные инсайты и рекомендации</span>
+          </div>
+        </label>
+      </div>
     </div>
     
     <button type="submit" class="btn-primary">Сохранить настройки</button>
@@ -69,29 +92,53 @@
     <a href="{% url 'logout' %}" class="btn-outline">Выйти</a>
   </div>
 </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
 <script>
-  // Получаем элементы
-  const remindersCheckbox = document.getElementById('reminders-enabled');
+  // 1. Напоминания и время
+  const remindersCheckbox = document.getElementById('reminder-enabled');
   const reminderTimeGroup = document.getElementById('reminder-time-group');
+  const reminderTimeInput = document.getElementById('reminder_time');
   
-  // Функция для показа/скрытия блока с временем
   function toggleReminderTime() {
-    if (remindersCheckbox.checked) {
-      reminderTimeGroup.style.display = 'block';
-    } else {
-      reminderTimeGroup.style.display = 'none';
+    if (remindersCheckbox && reminderTimeGroup) {
+      reminderTimeGroup.style.display = remindersCheckbox.checked ? 'block' : 'none';
+      if (reminderTimeInput && !remindersCheckbox.checked) {
+        reminderTimeInput.disabled = true;
+      } else if (reminderTimeInput) {
+        reminderTimeInput.disabled = false;
+      }
     }
   }
   
-  // Вешаем обработчик на изменение чекбокса
   if (remindersCheckbox) {
     remindersCheckbox.addEventListener('change', toggleReminderTime);
   }
   
-  // Вызываем функцию при загрузке страницы, чтобы установить правильное состояние
   toggleReminderTime();
+
+  // 2. Тёмная тема
+  const darkThemeCheckbox = document.getElementById('dark-theme');
+  const themeInput = document.getElementById('theme-input');
+  
+  if (darkThemeCheckbox && themeInput) {
+    darkThemeCheckbox.addEventListener('change', function() {
+      themeInput.value = this.checked ? 'dark' : 'light';
+      
+      // Применяем тему сразу (опционально)
+      if (this.checked) {
+        document.body.classList.add('dark-mode');
+      } else {
+        document.body.classList.remove('dark-mode');
+      }
+    });
+    
+    // Применяем сохранённую тему при загрузке
+    if (darkThemeCheckbox.checked) {
+      document.body.classList.add('dark-mode');
+    }
+  }
 </script>
 {% endblock %}

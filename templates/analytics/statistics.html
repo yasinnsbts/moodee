@@ -1,65 +1,151 @@
 {% extends "base.html" %}
+{% load static %}
+{% block page_class %}statistics{% endblock %}
 
 {% block title %}Статистика — Ладно{% endblock %}
 
 {% block content %}
-<section class="screen">
-    <h1>Аналитика настроения</h1>
+<div class="app">
+<section class="screen statistics-screen">
+    <div class="dashboard-hero">
+        <div>
+            <p class="eyebrow">Аналитика</p>
+            <h1>Аналитика настроения</h1>
+            <p class="hero-text">
+                Посмотрите динамику настроения, сна, активности и факторов за выбранный период.
+            </p>
+        </div>
 
-    <div class="card">
-        <p>Период: {{ period_title }}</p>
-        <p>Количество записей: {{ entries_count }}</p>
+        <div class="hero-badge" aria-hidden="true">
+            <span>📊</span>
+        </div>
     </div>
 
-    <div>
+    <div class="card statistics-summary">
+        <div class="summary-item">
+            <span class="summary-label">Период</span>
+            <strong>{{ period_title }}</strong>
+        </div>
+
+        <div class="summary-item">
+            <span class="summary-label">Количество записей</span>
+            <strong>{{ entries_count }}</strong>
+        </div>
+    </div>
+
+    <div class="period-tabs">
         <a class="button secondary" href="?period=week">Неделя</a>
         <a class="button secondary" href="?period=month">Месяц</a>
         <a class="button secondary" href="?period=year">Год</a>
     </div>
+
+    <div class="metric-grid statistics-metric-grid">
 
     <div class="metric-grid">
         <div class="card metric">
             <p>Настроение</p>
             <h2>{% if average_score %}{{ average_score }}{% else %}—{% endif %}</h2>
         </div>
+
         <div class="card metric">
             <p>Самочувствие</p>
             <h2>{% if average_wellbeing %}{{ average_wellbeing }}{% else %}—{% endif %}</h2>
         </div>
+
         <div class="card metric">
             <p>Активность</p>
             <h2>{% if average_activity %}{{ average_activity }}{% else %}—{% endif %}</h2>
         </div>
+
         <div class="card metric">
             <p>Стресс</p>
             <h2>{% if average_stress %}{{ average_stress }}{% else %}—{% endif %}</h2>
         </div>
+
         <div class="card metric">
             <p>Тревожность</p>
             <h2>{% if average_anxiety %}{{ average_anxiety }}{% else %}—{% endif %}</h2>
         </div>
+
         <div class="card metric">
             <p>Сон</p>
             <h2>{% if average_sleep %}{{ average_sleep }} ч{% else %}—{% endif %}</h2>
         </div>
     </div>
 
-    <div class="card">
-        <h2>Динамика</h2>
-        <canvas id="moodChart"></canvas>
+    <div class="card chart-card">
+        <div class="card-heading">
+            <div>
+                <p class="eyebrow">График</p>
+                <h2>Динамика</h2>
+            </div>
+            <p>
+                Линии показывают, как менялись показатели в выбранном периоде.
+            </p>
+        </div>
+
+        <div class="chart-wrap">
+            <canvas id="moodChart"></canvas>
+        </div>
     </div>
 
-    <div class="card">
-        <h2>Распределение настроений</h2>
-        <ul>
+    <div class="card analytics-card">
+        <div class="card-heading">
+            <div>
+                <p class="eyebrow">Настроение</p>
+                <h2>Распределение настроений</h2>
+            </div>
+            <p>
+                Показывает, какие оценки настроения встречались чаще всего за выбранный период.
+            </p>
+        </div>
+
+        <div class="mood-distribution">
             {% for item in distribution_items %}
-                <li>{{ item.score }} — {{ item.label }}: {{ item.count }}</li>
+                <div class="mood-distribution-row" data-count="{{ item.count }}">
+                    <div class="mood-score-badge">
+                        <strong>{{ item.score }}</strong>
+                        <span>/5</span>
+                    </div>
+
+                    <div class="mood-distribution-main">
+                        <div class="mood-distribution-title">
+                            <span>{{ item.label }}</span>
+                            <strong>{{ item.count }}</strong>
+                        </div>
+
+                        <div class="mood-distribution-track">
+                            <div class="mood-distribution-fill mood-fill-{{ item.score }}"></div>
+                        </div>
+
+                        <p>
+                            {% if item.count == 1 %}
+                                1 запись с такой оценкой
+                            {% else %}
+                                {{ item.count }} записей с такой оценкой
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="empty-state">
+                    <p>Пока нет данных для распределения настроений.</p>
+                </div>
             {% endfor %}
-        </ul>
+        </div>
     </div>
 
-    <div class="card">
-        <h2>Факторы</h2>
+    <div class="card analytics-card">
+        <div class="card-heading">
+            <div>
+                <p class="eyebrow">Контекст</p>
+                <h2>Факторы</h2>
+            </div>
+            <p>
+                Сравнение факторов помогает понять, что чаще связано с хорошими
+                и сложными днями.
+            </p>
+        </div>
 
         {% if top_factors %}
             <p>Чаще всего встречались:</p>
@@ -93,20 +179,122 @@
 
     <div class="card">
         <h2>Лучший и сложный день</h2>
+        {% if positive_factors or low_mood_factors %}
+            <div class="factor-compare-grid">
+                <div class="factor-compare-card positive-factor-card">
+                    <div class="factor-compare-header">
+                        <span class="factor-emoji">☀️</span>
+                        <div>
+                            <span class="entry-info-label">Хорошие дни</span>
+                            <h3>Что чаще помогало</h3>
+                        </div>
+                    </div>
 
-        {% if best_entry %}
-            <p>Лучший день: {{ best_entry.date }} — {{ best_entry.emoji }} {{ best_entry.mood_score }}/5</p>
-        {% else %}
-            <p>Лучший день: нет данных</p>
-        {% endif %}
+                    {% if positive_factors %}
+                        <div class="factor-list">
+                            {% for factor, count in positive_factors %}
+                                <div class="factor-item">
+                                    <span>{{ factor }}</span>
+                                    <strong>{{ count }}</strong>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="soft-text">
+                            Пока недостаточно данных по хорошим дням.
+                        </p>
+                    {% endif %}
+                </div>
 
-        {% if worst_entry %}
-            <p>Самый сложный день: {{ worst_entry.date }} — {{ worst_entry.emoji }} {{ worst_entry.mood_score }}/5</p>
+                <div class="factor-compare-card low-factor-card">
+                    <div class="factor-compare-header">
+                        <span class="factor-emoji">🌧️</span>
+                        <div>
+                            <span class="entry-info-label">Сложные дни</span>
+                            <h3>Что чаще мешало</h3>
+                        </div>
+                    </div>
+
+                    {% if low_mood_factors %}
+                        <div class="factor-list">
+                            {% for factor, count in low_mood_factors %}
+                                <div class="factor-item">
+                                    <span>{{ factor }}</span>
+                                    <strong>{{ count }}</strong>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="soft-text">
+                            Пока недостаточно данных по сложным дням.
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        {% elif top_factors %}
+            <div class="factor-compare-card">
+                <div class="factor-compare-header">
+                    <span class="factor-emoji">🏷️</span>
+                    <div>
+                        <span class="entry-info-label">Общие факторы</span>
+                        <h3>Что встречалось чаще всего</h3>
+                    </div>
+                </div>
+
+                <div class="factor-list">
+                    {% for factor, count in top_factors %}
+                        <div class="factor-item">
+                            <span>{{ factor }}</span>
+                            <strong>{{ count }}</strong>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
         {% else %}
-            <p>Самый сложный день: нет данных</p>
+            <div class="empty-state">
+                <p>Добавьте факторы в записи, чтобы увидеть закономерности.</p>
+            </div>
         {% endif %}
     </div>
 
+    <div class="card analytics-card">
+        <div class="card-heading">
+            <div>
+                <p class="eyebrow">Итоги</p>
+                <h2>Лучший и сложный день</h2>
+            </div>
+        </div>
+
+        <div class="day-comparison">
+            <div class="day-card best-day">
+                <span class="entry-info-label">Лучший день</span>
+
+                {% if best_entry %}
+                    <h3>{{ best_entry.emoji }} {{ best_entry.mood_score }}/5</h3>
+                    <p>{{ best_entry.date }}</p>
+                {% else %}
+                    <h3>—</h3>
+                    <p>Нет данных</p>
+                {% endif %}
+            </div>
+
+            <div class="day-card difficult-day">
+                <span class="entry-info-label">Самый сложный день</span>
+
+                {% if worst_entry %}
+                    <h3>{{ worst_entry.emoji }} {{ worst_entry.mood_score }}/5</h3>
+                    <p>{{ worst_entry.date }}</p>
+                {% else %}
+                    <h3>—</h3>
+                    <p>Нет данных</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <a class="btn-secondary export-button" href="{% url 'entry_export' %}" style="display: block; width: 100%; text-align: center;">
+        Экспорт данных CSV
+    </a>
     <a class="button secondary" href="{% url 'entry_export' %}">Экспорт данных CSV</a>
 </section>
 {% endblock %}
@@ -133,31 +321,83 @@
                     {
                         label: "Настроение",
                         data: moodValues,
-                        tension: 0.3
+                        borderColor: "#FF7E40",
+                        backgroundColor: "rgba(255, 126, 64, 0.12)",
+                        borderWidth: 3,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        pointBackgroundColor: "#FF7E40",
+                        pointBorderColor: "#FFFFFF",
+                        pointBorderWidth: 2,
+                        tension: 0.38
                     },
                     {
                         label: "Самочувствие",
                         data: wellbeingValues,
-                        tension: 0.3
+                        borderColor: "#4A9E86",
+                        backgroundColor: "rgba(74, 158, 134, 0.12)",
+                        borderWidth: 3,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        pointBackgroundColor: "#4A9E86",
+                        pointBorderColor: "#FFFFFF",
+                        pointBorderWidth: 2,
+                        tension: 0.38
                     },
                     {
                         label: "Активность",
                         data: activityValues,
-                        tension: 0.3
+                        borderColor: "#8FC1D4",
+                        backgroundColor: "rgba(143, 193, 212, 0.12)",
+                        borderWidth: 3,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        pointBackgroundColor: "#8FC1D4",
+                        pointBorderColor: "#FFFFFF",
+                        pointBorderWidth: 2,
+                        tension: 0.38
                     },
                     {
                         label: "Стресс",
                         data: stressValues,
+                        borderColor: "#C45B5B",
+                        backgroundColor: "rgba(196, 91, 91, 0.12)",
+                        borderWidth: 3,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        pointBackgroundColor: "#C45B5B",
+                        pointBorderColor: "#FFFFFF",
+                        pointBorderWidth: 2,
+                        tension: 0.38
                         tension: 0.3
                     },
                     {
                         label: "Тревожность",
                         data: anxietyValues,
+                        borderColor: "#D9904A",
+                        backgroundColor: "rgba(217, 144, 74, 0.12)",
+                        borderWidth: 3,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        pointBackgroundColor: "#D9904A",
+                        pointBorderColor: "#FFFFFF",
+                        pointBorderWidth: 2,
+                        tension: 0.38
                         tension: 0.3
                     },
                     {
                         label: "Сон",
                         data: sleepValues,
+                        yAxisID: "sleep",
+                        borderColor: "#6BA8C0",
+                        backgroundColor: "rgba(107, 168, 192, 0.12)",
+                        borderWidth: 3,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        pointBackgroundColor: "#6BA8C0",
+                        pointBorderColor: "#FFFFFF",
+                        pointBorderWidth: 2,
+                        tension: 0.38
                         tension: 0.3,
                         yAxisID: "sleep"
                     }
@@ -165,12 +405,98 @@
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: "index",
+                    intersect: false
+                },
+                plugins: {
+                    legend: {
+                        position: "bottom",
+                        labels: {
+                            color: "#2D6A4F",
+                            boxWidth: 10,
+                            boxHeight: 10,
+                            padding: 16,
+                            usePointStyle: true,
+                            pointStyle: "circle",
+                            font: {
+                                size: 13,
+                                weight: "600"
+                            }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: "rgba(32, 55, 47, 0.94)",
+                        titleColor: "#FFFFFF",
+                        bodyColor: "#FFFFFF",
+                        borderColor: "rgba(255, 255, 255, 0.18)",
+                        borderWidth: 1,
+                        padding: 12,
+                        cornerRadius: 14,
+                        displayColors: true
+                    }
+                },
                 scales: {
+                    x: {
+                        ticks: {
+                            color: "#6B8F7F",
+                            maxRotation: 0,
+                            autoSkip: true,
+                            font: {
+                                size: 12,
+                                weight: "600"
+                            }
+                        },
+                        grid: {
+                            color: "rgba(168, 196, 182, 0.2)"
+                        },
+                        border: {
+                            color: "rgba(168, 196, 182, 0.35)"
+                        }
+                    },
                     y: {
                         min: 1,
                         max: 5,
                         ticks: {
-                            stepSize: 1
+                            stepSize: 1,
+                            color: "#6B8F7F",
+                            font: {
+                                size: 12,
+                                weight: "600"
+                            }
+                        },
+                        grid: {
+                            color: "rgba(168, 196, 182, 0.22)"
+                        },
+                        border: {
+                            color: "rgba(168, 196, 182, 0.35)"
+                        }
+                    },
+                    sleep: {
+                        position: "right",
+                        min: 0,
+                        max: 12,
+                        ticks: {
+                            color: "#6B8F7F",
+                            font: {
+                                size: 12,
+                                weight: "600"
+                            }
+                        },
+                        grid: {
+                            drawOnChartArea: false
+                        },
+                        border: {
+                            color: "rgba(168, 196, 182, 0.35)"
+                        }
+                    },
+                    sleep: {
+                        position: "right",
+                        min: 0,
+                        max: 12,
+                        grid: {
+                            drawOnChartArea: false
                         }
                     },
                     sleep: {
@@ -185,5 +511,28 @@
             }
         });
     }
+
+    const distributionRows = document.querySelectorAll(".mood-distribution-row");
+
+    if (distributionRows.length > 0) {
+        const counts = Array.from(distributionRows).map((row) => {
+            return Number(row.dataset.count || 0);
+        });
+
+        const maxCount = Math.max(...counts);
+
+        distributionRows.forEach((row) => {
+            const count = Number(row.dataset.count || 0);
+            const fill = row.querySelector(".mood-distribution-fill");
+
+            if (!fill || maxCount <= 0) {
+                return;
+            }
+
+            const width = Math.max((count / maxCount) * 100, 8);
+            fill.style.width = `${width}%`;
+        });
+    }
 </script>
+</div>
 {% endblock %}

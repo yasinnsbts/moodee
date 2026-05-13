@@ -107,6 +107,12 @@ class MoodEntry(models.Model):
         indexes = [
             models.Index(fields=["user", "date"]),
         ]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "date"],
+                name="unique_mood_entry_per_user_date",
+            ),
+        ]
 
     @property
     def factor_list(self):

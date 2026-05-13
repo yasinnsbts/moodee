@@ -1,34 +1,145 @@
 {% extends "base.html" %}
+{% load static %}
+{% block page_class %}practices{% endblock %}
 
 {% block title %}Практики — Ладно{% endblock %}
 
 {% block content %}
-<section class="screen">
-    <h1>Дыхательные практики</h1>
-    <p>Подборка мягких упражнений на каждый день</p>
-
-    {% for practice in practices %}
-        <article class="card">
-            <h2>{{ practice.title }}</h2>
-            <p>{{ practice.cycles }} цикла • {{ practice.duration_minutes }} мин.</p>
-            <p>{{ practice.description }}</p>
-
+<div class="app">
+<section class="screen practices-screen">
+    <div class="dashboard-hero practices-hero">
+        <div>
+            <p class="eyebrow">Практики</p>
+            <h1>Дыхательные практики</h1>
+            <p class="hero-text">
+                Мягкие упражнения на каждый день: чтобы выдохнуть, снизить напряжение
+                и вернуться в более спокойное состояние.
+            </p>
             {% if practice.instruction %}
                 <p>{{ practice.instruction }}</p>
             {% endif %}
-
             <button class="primary" type="button">Выполнить</button>
         </article>
     {% empty %}
         <div class="card">
             <p>Практики пока не добавлены.</p>
         </div>
-    {% endfor %}
 
-    <div class="card">
+        <div class="hero-badge" aria-hidden="true">
+            <span>🌬️</span>
+        </div>
+    </div>
+
+    <div class="practice-intro-grid">
+        <div class="card practice-intro-card">
+            <span class="entry-info-label">Формат</span>
+            <h2>Короткие упражнения</h2>
+            <p>
+                Выберите практику, которая подходит по времени и состоянию.
+                Даже несколько минут могут помочь переключиться.
+            </p>
+        </div>
+
+        <div class="card practice-intro-card">
+            <span class="entry-info-label">Совет</span>
+            <h2>Без давления</h2>
+            <p>
+                Выполняйте практику в комфортном темпе. Если стало неприятно —
+                просто остановитесь и вернитесь к обычному дыханию.
+            </p>
+        </div>
+    </div>
+
+    <div class="practice-collection-heading">
+        <div>
+            <p class="eyebrow practice-eyebrow">Подборка</p>
+            <h2>Доступные практики</h2>
+            <p class="practice-heading-text">
+                Выберите упражнение по длительности и состоянию. Каждая практика помогает
+                мягко переключиться и вернуться к дыханию.
+            </p>
+        </div>
+
+        <div class="journal-badge" aria-hidden="true">
+            <span>📚</span>
+        </div>
+    </div>
+
+    <div class="practice-list">
+        {% for practice in practices %}
+            <article class="card practice-card">
+                <div class="practice-card-top">
+                    <div class="practice-icon" aria-hidden="true">
+                        <span>🧘</span>
+                    </div>
+
+                    <div>
+                        <p class="practice-label">Дыхательная практика</p>
+                        <h2>{{ practice.title }}</h2>
+                    </div>
+                </div>
+
+                <div class="practice-meta-grid">
+                    <div class="practice-meta-item">
+                        <span>Циклы</span>
+                        <strong>{{ practice.cycles }}</strong>
+                    </div>
+
+                    <div class="practice-meta-item">
+                        <span>Длительность</span>
+                        <strong>{{ practice.duration_minutes }} мин</strong>
+                    </div>
+                </div>
+
+                <div class="practice-text-box">
+                    <span class="entry-info-label">Описание</span>
+                    <p>{{ practice.description }}</p>
+                </div>
+
+                {% if practice.instruction %}
+                    <div class="practice-text-box practice-instruction-box">
+                        <span class="entry-info-label">Инструкция</span>
+                        <p>{{ practice.instruction }}</p>
+                    </div>
+                {% endif %}
+
+                <button class="button primary practice-button" type="button">
+                    Выполнить
+                </button>
+            </article>
+        {% empty %}
+            <div class="card empty-state practice-empty">
+                <p>Практики пока не добавлены.</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="card practice-insights-card">
+        <div class="practice-insights-content">
+            <div class="practice-icon practice-insights-icon" aria-hidden="true">
+                <span>💡</span>
+            </div>
+
+            <div>
+                <p class="eyebrow">Персональные инсайты</p>
+                <h2>Анализ недели</h2>
+                <p>
+                    Ладно сравнит настроение, сон, активность, стресс и факторы дня
+                    за последнюю неделю.
+                </p>
+            </div>
+        </div>
+
+        <a class="button secondary practice-insights-button" href="{% url 'ai_report' %}">
+            Получить анализ недели
+        </a>
+        <h2>Персональные инсайты</h2>
+        <p>Ладно сравнит настроение, сон, активность, стресс и факторы дня за последнюю неделю.</p>
+        <a class="button secondary" href="{% url 'ai_report' %}">Получить анализ недели</a>
         <h2>Рекомендация</h2>
         <p>Если настроение снижено или ощущается напряжение, попробуйте короткую дыхательную практику вечером.</p>
         <a class="button secondary" href="{% url 'ai_report' %}">Получить анализ недели</a>
     </div>
 </section>
+</div>
 {% endblock %}

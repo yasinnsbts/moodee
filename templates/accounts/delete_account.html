@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 {% load static %}
+{% block page_class %}delete-account{% endblock %}
 
 {% block title %}Удаление аккаунта — Ладно{% endblock %}
 
 {% block content %}
-<div class="glass-card danger-card">
+<div class="app">
+<div class="glass-card danger-card" style="max-width: 550px; margin: 0 auto;">
   <div class="logo-area">
     <div class="logo-icon">
       <img src="{% static 'images/logo.png' %}" alt="Ладно">
@@ -36,5 +38,6 @@
       <a href="{% url 'profile' %}" class="btn-secondary">Отмена</a>
     </div>
   </form>
+</div>
 </div>
 {% endblock %}

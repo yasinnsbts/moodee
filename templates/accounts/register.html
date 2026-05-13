@@ -4,43 +4,47 @@
 {% block title %}Регистрация — Ладно{% endblock %}
 
 {% block content %}
-<div class="glass-card">
-  <div class="logo-area">
-     <div class="logo-icon">
-       <img src="{% static 'images/logo.png' %}" alt="Ладно">
-    </div>
-    <h2>Регистрация</h2>
-    <div class="subhead">Создайте аккаунт, чтобы сохранять историю</div>
-  </div>
+<div class="auth-container">
+    <div class="auth-wrapper">
+        <div class="glass-card">
+          <div class="logo-area">
+             <div class="logo-icon">
+               <img src="{% static 'images/logo.png' %}" alt="Ладно">
+            </div>
+            <h2>Регистрация</h2>
+            <div class="subhead">Создайте аккаунт, чтобы сохранять историю</div>
+          </div>
 
-  <form method="post">
-    {% csrf_token %}
+          <form method="post">
+            {% csrf_token %}
     
-    {% if form.errors %}
-    <div class="messages">
-      {% for field, errors in form.errors.items %}
-        {% for error in errors %}
-          <div class="message">{{ error }}</div>
-        {% endfor %}
-      {% endfor %}
-    </div>
-    {% endif %}
+            {% if form.errors %}
+            <div class="messages">
+              {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                  <div class="message">{{ error }}</div>
+                {% endfor %}
+              {% endfor %}
+            </div>
+            {% endif %}
     
-    {% for field in form %}
-    <div class="input-group">
-      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-      {{ field }}
-      {% if field.help_text %}
-        <small class="help-text">{{ field.help_text }}</small>
-      {% endif %}
-    </div>
-    {% endfor %}
+            {% for field in form %}
+            <div class="input-group">
+              <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+              {{ field }}
+              {% if field.help_text %}
+                <small class="help-text">{{ field.help_text }}</small>
+              {% endif %}
+            </div>
+            {% endfor %}
     
-    <button type="submit" class="btn-primary">Зарегистрироваться</button>
-  </form>
+            <button type="submit" class="btn-primary">Зарегистрироваться</button>
+          </form>
 
-  <div class="footer-action">
-    Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a>
-  </div>
+          <div class="footer-action">
+            Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a>
+          </div>
+       </div>
+    </div>
 </div>
 {% endblock %}
