@@ -1,7 +1,11 @@
 {% extends "base.html" %}
 {% load static %}
 
+<<<<<<< HEAD
 {% block title %}Новая запись — Ладно{% endblock %}
+=======
+{% block title %}{{ title }} — Ладно{% endblock %}
+>>>>>>> a448af29ac36a03c1b4d24b8c17b7dbe9350da17
 
 {% block content %}
 <div class="app">
@@ -16,10 +20,32 @@
                 </p>
             </div>
 
+<<<<<<< HEAD
             <div class="hero-badge" aria-hidden="true">
                 <span>📝</span>
             </div>
         </div>
+=======
+    <form class="form" method="post">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div class="message danger-message">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        {% for field in form %}
+            <label class="field">
+                <span>{{ field.label }}</span>
+                {{ field }}
+                {% if field.help_text %}
+                    <small>{{ field.help_text }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                    <small class="error">{{ error }}</small>
+                {% endfor %}
+            </label>
+        {% endfor %}
+>>>>>>> a448af29ac36a03c1b4d24b8c17b7dbe9350da17
 
         <form method="post" class="entry-form">
             {% csrf_token %}

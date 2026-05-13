@@ -5,6 +5,7 @@
 {% block title %}История записей — Ладно{% endblock %}
 
 {% block content %}
+<<<<<<< HEAD
 <div class="app">
 <section class="screen entry-list-screen">
     <div class="dashboard-hero entry-list-hero">
@@ -15,6 +16,72 @@
                 Все ваши check-in записи в одном месте. Можно отфильтровать историю
                 по датам и настроению.
             </p>
+=======
+<section class="screen">
+    <h1>История записей</h1>
+    <p>Всего записей: {{ entries_count }}</p>
+
+    <form class="form" method="get">
+        <label>
+            С даты
+            <input type="date" name="start_date" value="{{ start_date }}">
+        </label>
+
+        <label>
+            По дату
+            <input type="date" name="end_date" value="{{ end_date }}">
+        </label>
+
+        <label>
+            Настроение
+            <select name="mood_score">
+                <option value="">Любое</option>
+                <option value="1" {% if mood_score == "1" %}selected{% endif %}>1 — Очень плохо</option>
+                <option value="2" {% if mood_score == "2" %}selected{% endif %}>2 — Плохо</option>
+                <option value="3" {% if mood_score == "3" %}selected{% endif %}>3 — Нейтрально</option>
+                <option value="4" {% if mood_score == "4" %}selected{% endif %}>4 — Хорошо</option>
+                <option value="5" {% if mood_score == "5" %}selected{% endif %}>5 — Отлично</option>
+            </select>
+        </label>
+
+        <button class="primary" type="submit">Применить фильтр</button>
+        <a class="button secondary" href="{% url 'entry_list' %}">Сбросить</a>
+    </form>
+
+    <div class="actions-row">
+        <a class="button primary" href="{% url 'entry_create' %}">+ Добавить запись</a>
+        <a class="button secondary" href="{% url 'entry_export' %}?start_date={{ start_date }}&end_date={{ end_date }}&mood_score={{ mood_score }}">Экспорт CSV</a>
+    </div>
+
+    {% for entry in entries %}
+        <article class="card">
+            <p>{{ entry.date }}</p>
+            <h2>{{ entry.emoji }} {{ entry.mood_score }}/5</h2>
+            <p>Самочувствие: {{ entry.wellbeing_score }}/5</p>
+            <p>Активность: {{ entry.activity_score }}/5</p>
+            <p>Стресс: {{ entry.stress_score }}/5 • Тревожность: {{ entry.anxiety_score }}/5</p>
+            {% if entry.sleep_hours %}
+                <p>Сон: {{ entry.sleep_hours }} ч</p>
+            {% endif %}
+            {% if entry.factors %}
+                <p>Факторы: {{ entry.factors }}</p>
+            {% endif %}
+            {% if entry.gratitude %}
+                <p>Благодарность: {{ entry.gratitude }}</p>
+            {% endif %}
+            <p>{{ entry.note|default:"Без заметки" }}</p>
+
+            {% if entry.can_edit %}
+                <a href="{% url 'entry_update' entry.pk %}">✎ Редактировать</a>
+            {% else %}
+                <span class="small">Редактирование закрыто</span>
+            {% endif %}
+            <a href="{% url 'entry_delete' entry.pk %}">🗑 Удалить</a>
+        </article>
+    {% empty %}
+        <div class="card">
+            <p>По выбранным фильтрам записей нет.</p>
+>>>>>>> a448af29ac36a03c1b4d24b8c17b7dbe9350da17
         </div>
 
         <div class="hero-badge" aria-hidden="true">

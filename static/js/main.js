@@ -1,1 +1,1 @@
-console.log("Moodee loaded");
+console.log("Ладно loaded");
