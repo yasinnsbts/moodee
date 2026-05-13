@@ -102,6 +102,18 @@
         {% if average_sleep %}
             <p>Средний сон: {{ average_sleep }} ч</p>
         {% endif %}
+
+        {% if average_stress %}
+            <p>Средний стресс: {{ average_stress }} / 5</p>
+        {% endif %}
+
+        {% if average_anxiety %}
+            <p>Средняя тревожность: {{ average_anxiety }} / 5</p>
+        {% endif %}
+
+        {% if average_sleep %}
+            <p>Средний сон: {{ average_sleep }} ч</p>
+        {% endif %}
     </div>
 
     <div class="card ai-insights-card">
@@ -127,7 +139,6 @@
                     <p>Пока недостаточно данных для инсайтов. Добавьте больше записей в дневник.</p>
                 </div>
             {% endfor %}
-<<<<<<< HEAD
         </div>
     </div>
 
@@ -136,17 +147,6 @@
             <div class="practice-icon ai-recommendation-icon" aria-hidden="true">
                 <span>🎯</span>
             </div>
-=======
-        </ul>
-
-        <p><strong>Следующий шаг:</strong> {{ recommendation }}</p>
-    </div>
-
-    <p class="small">
-        Это не диагноз и не медицинская рекомендация. Анализ основан только на ваших записях в дневнике.
-        Если вы чувствуете риск навредить себе или другому человеку, обратитесь в экстренную службу или к специалисту.
-    </p>
->>>>>>> a448af29ac36a03c1b4d24b8c17b7dbe9350da17
 
             <div>
                 <p class="eyebrow">Следующий шаг</p>

@@ -39,57 +39,39 @@
         <a class="button secondary" href="?period=year">Год</a>
     </div>
 
-<<<<<<< HEAD
     <div class="metric-grid statistics-metric-grid">
-=======
+
     <div class="metric-grid">
->>>>>>> a448af29ac36a03c1b4d24b8c17b7dbe9350da17
         <div class="card metric">
             <p>Настроение</p>
             <h2>{% if average_score %}{{ average_score }}{% else %}—{% endif %}</h2>
         </div>
-<<<<<<< HEAD
 
-=======
->>>>>>> a448af29ac36a03c1b4d24b8c17b7dbe9350da17
         <div class="card metric">
             <p>Самочувствие</p>
             <h2>{% if average_wellbeing %}{{ average_wellbeing }}{% else %}—{% endif %}</h2>
         </div>
-<<<<<<< HEAD
 
-=======
->>>>>>> a448af29ac36a03c1b4d24b8c17b7dbe9350da17
         <div class="card metric">
             <p>Активность</p>
             <h2>{% if average_activity %}{{ average_activity }}{% else %}—{% endif %}</h2>
         </div>
-<<<<<<< HEAD
 
-=======
->>>>>>> a448af29ac36a03c1b4d24b8c17b7dbe9350da17
         <div class="card metric">
             <p>Стресс</p>
             <h2>{% if average_stress %}{{ average_stress }}{% else %}—{% endif %}</h2>
         </div>
-<<<<<<< HEAD
 
-=======
->>>>>>> a448af29ac36a03c1b4d24b8c17b7dbe9350da17
         <div class="card metric">
             <p>Тревожность</p>
             <h2>{% if average_anxiety %}{{ average_anxiety }}{% else %}—{% endif %}</h2>
         </div>
-<<<<<<< HEAD
 
-=======
->>>>>>> a448af29ac36a03c1b4d24b8c17b7dbe9350da17
         <div class="card metric">
             <p>Сон</p>
             <h2>{% if average_sleep %}{{ average_sleep }} ч{% else %}—{% endif %}</h2>
         </div>
     </div>
-<<<<<<< HEAD
 
     <div class="card chart-card">
         <div class="card-heading">
@@ -117,8 +99,6 @@
                 Показывает, какие оценки настроения встречались чаще всего за выбранный период.
             </p>
         </div>
-=======
->>>>>>> a448af29ac36a03c1b4d24b8c17b7dbe9350da17
 
         <div class="mood-distribution">
             {% for item in distribution_items %}
@@ -155,7 +135,6 @@
         </div>
     </div>
 
-<<<<<<< HEAD
     <div class="card analytics-card">
         <div class="card-heading">
             <div>
@@ -167,9 +146,6 @@
                 и сложными днями.
             </p>
         </div>
-=======
-    <div class="card">
-        <h2>Факторы</h2>
 
         {% if top_factors %}
             <p>Чаще всего встречались:</p>
@@ -203,8 +179,6 @@
 
     <div class="card">
         <h2>Лучший и сложный день</h2>
->>>>>>> a448af29ac36a03c1b4d24b8c17b7dbe9350da17
-
         {% if positive_factors or low_mood_factors %}
             <div class="factor-compare-grid">
                 <div class="factor-compare-card positive-factor-card">
@@ -283,7 +257,6 @@
         {% endif %}
     </div>
 
-<<<<<<< HEAD
     <div class="card analytics-card">
         <div class="card-heading">
             <div>
@@ -322,9 +295,7 @@
     <a class="btn-secondary export-button" href="{% url 'entry_export' %}" style="display: block; width: 100%; text-align: center;">
         Экспорт данных CSV
     </a>
-=======
     <a class="button secondary" href="{% url 'entry_export' %}">Экспорт данных CSV</a>
->>>>>>> a448af29ac36a03c1b4d24b8c17b7dbe9350da17
 </section>
 {% endblock %}
 
@@ -376,7 +347,6 @@
                     {
                         label: "Активность",
                         data: activityValues,
-<<<<<<< HEAD
                         borderColor: "#8FC1D4",
                         backgroundColor: "rgba(143, 193, 212, 0.12)",
                         borderWidth: 3,
@@ -386,14 +356,10 @@
                         pointBorderColor: "#FFFFFF",
                         pointBorderWidth: 2,
                         tension: 0.38
-=======
-                        tension: 0.3
->>>>>>> a448af29ac36a03c1b4d24b8c17b7dbe9350da17
                     },
                     {
                         label: "Стресс",
                         data: stressValues,
-<<<<<<< HEAD
                         borderColor: "#C45B5B",
                         backgroundColor: "rgba(196, 91, 91, 0.12)",
                         borderWidth: 3,
@@ -403,14 +369,11 @@
                         pointBorderColor: "#FFFFFF",
                         pointBorderWidth: 2,
                         tension: 0.38
-=======
                         tension: 0.3
->>>>>>> a448af29ac36a03c1b4d24b8c17b7dbe9350da17
                     },
                     {
                         label: "Тревожность",
                         data: anxietyValues,
-<<<<<<< HEAD
                         borderColor: "#D9904A",
                         backgroundColor: "rgba(217, 144, 74, 0.12)",
                         borderWidth: 3,
@@ -420,14 +383,11 @@
                         pointBorderColor: "#FFFFFF",
                         pointBorderWidth: 2,
                         tension: 0.38
-=======
                         tension: 0.3
->>>>>>> a448af29ac36a03c1b4d24b8c17b7dbe9350da17
                     },
                     {
                         label: "Сон",
                         data: sleepValues,
-<<<<<<< HEAD
                         yAxisID: "sleep",
                         borderColor: "#6BA8C0",
                         backgroundColor: "rgba(107, 168, 192, 0.12)",
@@ -438,10 +398,8 @@
                         pointBorderColor: "#FFFFFF",
                         pointBorderWidth: 2,
                         tension: 0.38
-=======
                         tension: 0.3,
                         yAxisID: "sleep"
->>>>>>> a448af29ac36a03c1b4d24b8c17b7dbe9350da17
                     }
                 ]
             },
@@ -531,6 +489,14 @@
                         },
                         border: {
                             color: "rgba(168, 196, 182, 0.35)"
+                        }
+                    },
+                    sleep: {
+                        position: "right",
+                        min: 0,
+                        max: 12,
+                        grid: {
+                            drawOnChartArea: false
                         }
                     },
                     sleep: {

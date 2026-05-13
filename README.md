@@ -234,8 +234,8 @@ Copy-Item .env.example .env
 ```env
 SECRET_KEY=replace-me
 DEBUG=True
-ALLOWED_HOSTS=localhost,127.0.0.1
-CSRF_TRUSTED_ORIGINS=
+ALLOWED_HOSTS=localhost,127.0.0.1,.app.github.dev,.githubpreview.dev
+CSRF_TRUSTED_ORIGINS=https://*.app.github.dev,https://*.githubpreview.dev
 
 DB_NAME=ladno_db
 DB_USER=ladno_user
@@ -251,10 +251,14 @@ DEFAULT_FROM_EMAIL=Ладно <noreply@ladno.local>
 
 Файл `.env` не должен попадать в git.
 
+Если `.env` был создан до переименования проекта, проверьте, что в нем нет старых
+значений `moodee_db`, `moodee_user`, `moodee_password`. После смены данных
+PostgreSQL для существующего Docker volume может потребоваться пересоздать volume.
+
 ## Запуск на Linux
 
 ```bash
-cd ladno
+cd moodee
 
 python3 -m venv .venv
 source .venv/bin/activate
@@ -290,7 +294,7 @@ http://127.0.0.1:8000/
 ```powershell
 cd C:\Projects
 git clone <url-репозитория>
-cd ladno
+cd moodee
 
 Copy-Item .env.example .env
 
@@ -355,7 +359,8 @@ docker compose up -d db
 DB_PORT=5433
 ```
 
-Если порт `5433` занят, поменяйте порт и в `docker-compose.yml`, и в `.env`.
+Если порт `5433` занят, поменяйте `DB_PORT` в `.env`; Docker Compose использует это
+значение автоматически.
 
 ## Полезные команды
 

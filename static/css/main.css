@@ -2016,7 +2016,6 @@ input:focus, textarea:focus, select:focus,
 .settings-block {
     background: rgba(255, 248, 239, 0.6);
     border-radius: 1.5rem;
-<<<<<<< HEAD
     padding: 0.5rem;
     margin: 1.5rem 0;
     border: 1px solid rgba(255, 224, 181, 0.6);
@@ -2115,7 +2114,6 @@ input:focus, textarea:focus, select:focus,
 .reminder-time-settings .help-text {
     margin-top: 0.3rem;
 }
-=======
   }
   
   h2 {
@@ -2140,4 +2138,3 @@ input:focus, textarea:focus, select:focus,
     padding: 0.3rem 0.5rem;
   }
 }
->>>>>>> a448af29ac36a03c1b4d24b8c17b7dbe9350da17

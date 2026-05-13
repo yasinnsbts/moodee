@@ -5,7 +5,6 @@
 {% block title %}Практики — Ладно{% endblock %}
 
 {% block content %}
-<<<<<<< HEAD
 <div class="app">
 <section class="screen practices-screen">
     <div class="dashboard-hero practices-hero">
@@ -16,16 +15,6 @@
                 Мягкие упражнения на каждый день: чтобы выдохнуть, снизить напряжение
                 и вернуться в более спокойное состояние.
             </p>
-=======
-<section class="screen">
-    <h1>Дыхательные практики</h1>
-    <p>Подборка мягких упражнений на каждый день</p>
-
-    {% for practice in practices %}
-        <article class="card">
-            <h2>{{ practice.title }}</h2>
-            <p>{{ practice.cycles }} цикла • {{ practice.duration_minutes }} минуты</p>
-            <p>{{ practice.description }}</p>
             {% if practice.instruction %}
                 <p>{{ practice.instruction }}</p>
             {% endif %}
@@ -34,10 +23,8 @@
     {% empty %}
         <div class="card">
             <p>Практики пока не добавлены.</p>
->>>>>>> a448af29ac36a03c1b4d24b8c17b7dbe9350da17
         </div>
 
-<<<<<<< HEAD
         <div class="hero-badge" aria-hidden="true">
             <span>🌬️</span>
         </div>
@@ -146,12 +133,12 @@
         <a class="button secondary practice-insights-button" href="{% url 'ai_report' %}">
             Получить анализ недели
         </a>
-=======
-    <div class="card">
         <h2>Персональные инсайты</h2>
         <p>Ладно сравнит настроение, сон, активность, стресс и факторы дня за последнюю неделю.</p>
         <a class="button secondary" href="{% url 'ai_report' %}">Получить анализ недели</a>
->>>>>>> a448af29ac36a03c1b4d24b8c17b7dbe9350da17
+        <h2>Рекомендация</h2>
+        <p>Если настроение снижено или ощущается напряжение, попробуйте короткую дыхательную практику вечером.</p>
+        <a class="button secondary" href="{% url 'ai_report' %}">Получить анализ недели</a>
     </div>
 </section>
 </div>
