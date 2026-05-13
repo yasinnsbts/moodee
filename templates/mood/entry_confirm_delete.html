@@ -1,16 +1,52 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %}Удаление записи — Moodee{% endblock %}
+{% block title %}Удаление записи — Ладно{% endblock %}
 
 {% block content %}
-<section class="screen">
-    <h1>Удалить запись?</h1>
-    <p>Вы уверены, что хотите удалить запись за {{ entry.date }}?</p>
+<div class="app">
+    <section class="screen delete-entry-screen">
+        <div class="dashboard-hero delete-entry-hero">
+            <div>
+                <p class="eyebrow">Удаление</p>
+                <h1>Удалить запись?</h1>
+                <p class="hero-text">
+                    Это действие нельзя отменить. Запись исчезнет из истории, статистики
+                    и недельного анализа.
+                </p>
+            </div>
 
-    <form method="post">
-        {% csrf_token %}
-        <button class="danger" type="submit">Да, удалить</button>
-        <a class="button secondary" href="{% url 'dashboard' %}">Отмена</a>
-    </form>
-</section>
+            <div class="hero-badge delete-hero-badge" aria-hidden="true">
+                <span>🗑️</span>
+            </div>
+        </div>
+
+        <div class="card delete-confirm-card">
+            <div class="delete-confirm-main">
+                <div class="delete-warning-icon" aria-hidden="true">
+                    !
+                </div>
+
+                <div>
+                    <p class="eyebrow">Подтверждение</p>
+                    <h2>Запись за {{ entry.date }}</h2>
+                    <p>
+                        Вы уверены, что хотите удалить эту запись? Все связанные с ней данные
+                        больше не будут учитываться в дневнике.
+                    </p>
+                </div>
+            </div>
+
+            <form class="delete-confirm-form" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn-danger delete-confirm-button">
+                    Да, удалить
+                </button>
+                <a href="{% url 'dashboard' %}" class="btn-secondary delete-cancel-button">
+                    Отмена
+                </a>
+            </form>
+        </div>
+    </section>
+</div>
 {% endblock %}
