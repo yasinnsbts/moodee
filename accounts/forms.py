@@ -61,6 +61,7 @@ class UserSettingsForm(forms.ModelForm):
         model = UserSettings
         fields = [
             "theme",
+            "reminder_enabled",
             "reminder_time",
             "ai_analysis_enabled",
         ]
