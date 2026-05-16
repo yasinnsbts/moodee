@@ -1,82 +1,64 @@
 {% extends "base.html" %}
-{% load static %}
-{% block page_class %}dashboard{% endblock %}
 
 {% block title %}Главная — Ладно{% endblock %}
 
 {% block content %}
-<div class="app">
 <section class="screen dashboard-screen">
     <div class="dashboard-top">
         <div class="dashboard-hero">
             <div>
-                <p class="eyebrow">Сегодняшний check-in</p>
+                <p class="eyebrow">Сегодня</p>
                 <h1>Добрый день, {{ request.user.first_name|default:request.user.username }}!</h1>
                 <p class="hero-text">
-                    Ваш дневник на сегодня готов. Серия записей:
-                    <strong>{{ current_streak }} дн.</strong>
+                    Ваш дневник настроения готов. Отметьте состояние или посмотрите последние записи.
                 </p>
             </div>
 
-            <div class="hero-badge" aria-hidden="true">
-                <span>☁️</span>
-            </div>
+            <div class="hero-badge">🌿</div>
         </div>
 
-        <div class="card highlight">
-            {% if today_entry %}
-                <div class="today-checkin-info">
-                    <div class="today-mood-badge" aria-hidden="true">
-                        <span>{{ today_entry.emoji }}</span>
-                    </div>
+        <div class="card highlight today-checkin-info">
+            <div class="today-mood-badge">
+                <span>🙂</span>
+            </div>
 
-                    <div>
-                        <p class="card-label">Сегодня уже отмечено:</p>
-                        <h2>{{ today_entry.mood_score }}/5</h2>
-                    </div>
-                </div>
+            <div>
+                <p class="card-label">Среднее настроение за 7 дней</p>
 
-                {% if today_entry.can_edit %}
-                    <a class="button secondary" href="{% url 'entry_update' today_entry.pk %}">
-                        Редактировать сегодня
-                    </a>
+                {% if weekly_average %}
+                    <h2>{{ weekly_average }} / 5</h2>
                 {% else %}
-                    <p class="small">Редактирование доступно только 24 часа после создания.</p>
+                    <h2>Нет данных</h2>
                 {% endif %}
-            {% else %}
-                <div>
-                    <p class="card-label">Сегодня ещё нет записи</p>
-                    <h2>2 минуты на check-in</h2>
-                </div>
+            </div>
+        </div>
+    </div>
 
-                <a class="button primary" href="{% url 'entry_create' %}">
-                    Добавить запись
-                </a>
+    <div class="metric-grid">
+        <div class="card metric">
+            <p>Среднее настроение</p>
+            {% if weekly_average %}
+                <h2>{{ weekly_average }}</h2>
+            {% else %}
+                <h2>—</h2>
             {% endif %}
         </div>
 
-        <div class="metric-grid">
-            <div class="card metric">
-                <p>Настроение за 7 дней</p>
-                <h2>{% if weekly_average %}{{ weekly_average }}{% else %}—{% endif %}</h2>
-            </div>
-
-            <div class="card metric">
-                <p>Стресс</p>
-                <h2>{% if weekly_stress %}{{ weekly_stress }}{% else %}—{% endif %}</h2>
-            </div>
-
-            <div class="card metric">
-                <p>Сон</p>
-                <h2>{% if weekly_sleep %}{{ weekly_sleep }} ч{% else %}—{% endif %}</h2>
-            </div>
+        <div class="card metric">
+            <p>Последние записи</p>
+            <h2>{{ latest_entries|length }}</h2>
         </div>
 
-        <div class="actions-row">
-            <a class="button secondary" href="{% url 'entry_list' %}">История</a>
-            <a class="button secondary" href="{% url 'statistics' %}">Аналитика</a>
-            <a class="button secondary" href="{% url 'ai_report' %}">Инсайты</a>
+        <div class="card metric">
+            <p>Статус</p>
+            <h2>OK</h2>
         </div>
+    </div>
+
+    <div class="actions-row">
+        <a class="button primary" href="{% url 'entry_create' %}">+ Добавить запись</a>
+        <a class="button secondary" href="{% url 'entry_list' %}">История записей</a>
+        <a class="button secondary" href="{% url 'statistics' %}">Статистика</a>
     </div>
 
     <div class="journal-divider">
@@ -84,14 +66,11 @@
             <p class="eyebrow journal-eyebrow">Журнал</p>
             <h2>Последние записи</h2>
             <p class="journal-text">
-                Здесь собраны последние check-in записи: настроение, самочувствие,
-                активность, сон и заметки.
+                Здесь отображаются последние отметки настроения, самочувствия и активности.
             </p>
         </div>
 
-        <div class="journal-badge" aria-hidden="true">
-            <span>📝</span>
-        </div>
+        <div class="journal-badge">📘</div>
     </div>
 
     {% for entry in latest_entries %}
@@ -99,80 +78,45 @@
             <div class="entry-top">
                 <div>
                     <p class="entry-date">{{ entry.date }}</p>
-                    <h3>{{ entry.emoji }} {{ entry.mood_score }}/5</h3>
+                    <h3>Настроение {{ entry.mood_score }}/5</h3>
                 </div>
             </div>
 
-            <div class="entry-details">
-                <div class="entry-score-panel">
-                    <span class="entry-info-label">Показатели</span>
+            <div class="entry-score-panel">
+                <div class="entry-score-grid">
+                    <div class="entry-score-item">
+                        <span>Настроение</span>
+                        <strong>{{ entry.mood_score }}/5</strong>
+                    </div>
 
-                    <div class="entry-score-grid">
-                        <div class="entry-score-item">
-                            <span>Самочувствие</span>
-                            <strong>{{ entry.wellbeing_score }}/5</strong>
-                        </div>
+                    <div class="entry-score-item">
+                        <span>Самочувствие</span>
+                        <strong>{{ entry.wellbeing_score }}/5</strong>
+                    </div>
 
-                        <div class="entry-score-item">
-                            <span>Активность</span>
-                            <strong>{{ entry.activity_score }}/5</strong>
-                        </div>
-
-                        <div class="entry-score-item">
-                            <span>Стресс</span>
-                            <strong>{{ entry.stress_score }}/5</strong>
-                        </div>
-
-                        <div class="entry-score-item">
-                            <span>Тревожность</span>
-                            <strong>{{ entry.anxiety_score }}/5</strong>
-                        </div>
-
-                        {% if entry.sleep_hours %}
-                            <div class="entry-score-item">
-                                <span>Сон</span>
-                                <strong>{{ entry.sleep_hours }} ч</strong>
-                            </div>
-                        {% endif %}
+                    <div class="entry-score-item">
+                        <span>Активность</span>
+                        <strong>{{ entry.activity_score }}/5</strong>
                     </div>
                 </div>
+            </div>
 
-                {% if entry.factors %}
-                    <div class="entry-info-box entry-factors">
-                        <span class="entry-info-label">Факторы</span>
-                        <p>{{ entry.factors }}</p>
-                    </div>
-                {% endif %}
-
-                {% if entry.gratitude %}
-                    <div class="entry-info-box entry-gratitude">
-                        <span class="entry-info-label">Благодарность</span>
-                        <p>{{ entry.gratitude }}</p>
-                    </div>
-                {% endif %}
-
+            {% if entry.note %}
                 <div class="entry-info-box entry-note-box">
                     <span class="entry-info-label">Заметка</span>
-                    <p>{{ entry.note|default:"Без заметки" }}</p>
+                    <p>{{ entry.note }}</p>
                 </div>
-            </div>
+            {% endif %}
 
             <div class="entry-actions">
-                {% if entry.can_edit %}
-                    <a class="entry-action-btn edit-btn" href="{% url 'entry_update' entry.pk %}">
-                        ✎ Редактировать
-                    </a>
-                {% else %}
-                    <span class="entry-action-disabled">Редактирование закрыто</span>
-                {% endif %}
+                <a class="entry-action-btn edit-btn" href="{% url 'entry_update' entry.pk %}">
+                    Редактировать
+                </a>
 
                 <a class="entry-action-btn delete-btn" href="{% url 'entry_delete' entry.pk %}">
-                    🗑 Удалить
+                    Удалить
                 </a>
             </div>
-                <span class="small">Редактирование закрыто</span>
-            {% endif %}
-            <a href="{% url 'entry_delete' entry.pk %}">🗑 Удалить</a>
         </article>
     {% empty %}
         <div class="card empty-card">
@@ -180,5 +124,4 @@
         </div>
     {% endfor %}
 </section>
-</div> 
 {% endblock %}
