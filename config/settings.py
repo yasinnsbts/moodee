@@ -14,6 +14,14 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 
+def get_csv_env(name, default=""):
+    return [
+        item.strip()
+        for item in os.getenv(name, default).split(",")
+        if item.strip()
+    ]
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / ".env")
@@ -27,6 +35,16 @@ SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-fallback-key")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False") == "True"
+
+ALLOWED_HOSTS = get_csv_env(
+    "ALLOWED_HOSTS",
+    "localhost,127.0.0.1,0.0.0.0,testserver,.github.dev,.app.github.dev,.preview.app.github.dev",
+)
+
+CSRF_TRUSTED_ORIGINS = get_csv_env(
+    "CSRF_TRUSTED_ORIGINS",
+    "http://localhost:8000,http://127.0.0.1:8000,https://*.github.dev,https://*.app.github.dev,https://*.preview.app.github.dev",
+)
 
 DEFAULT_ALLOWED_HOSTS = "localhost,127.0.0.1,.app.github.dev,.githubpreview.dev"
 DEFAULT_CSRF_TRUSTED_ORIGINS = (
@@ -47,12 +65,7 @@ def get_csv_env(name, default):
     ]
 
 
-ALLOWED_HOSTS = get_csv_env("ALLOWED_HOSTS", DEFAULT_ALLOWED_HOSTS)
 
-CSRF_TRUSTED_ORIGINS = get_csv_env(
-    "CSRF_TRUSTED_ORIGINS",
-    DEFAULT_CSRF_TRUSTED_ORIGINS,
-)
 
 
 # Application definition
@@ -66,6 +79,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
 
     # Local apps
+    "core",
     "accounts",
     "mood",
     "analytics",
@@ -177,39 +191,7 @@ EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
 
 # Local/demo host settings
-ALLOWED_HOSTS = [
-    "localhost",
-    "127.0.0.1",
-    "0.0.0.0",
-    "testserver",
-    ".github.dev",
-    ".app.github.dev",
-    ".preview.app.github.dev",
-]
 
-CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:8000",
-    "http://127.0.0.1:8000",
-    "https://*.github.dev",
-    "https://*.app.github.dev",
-    "https://*.preview.app.github.dev",
-]
 
 # Local/demo host settings
-ALLOWED_HOSTS = [
-    "localhost",
-    "127.0.0.1",
-    "0.0.0.0",
-    "testserver",
-    ".github.dev",
-    ".app.github.dev",
-    ".preview.app.github.dev",
-]
 
-CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:8000",
-    "http://127.0.0.1:8000",
-    "https://*.github.dev",
-    "https://*.app.github.dev",
-    "https://*.preview.app.github.dev",
-]

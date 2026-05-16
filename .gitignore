@@ -37,3 +37,15 @@ local_settings.py
 # Windows
 Thumbs.db
 Desktop.ini
+
+# Local review / backup artifacts
+backups/
+merge_conflict_backup/
+*.backup
+*.broken
+backend-review.zip
+ladno-backend-*.zip
+ladno-backend*.zip
+
+# OS files
+.DS_Store

@@ -248,7 +248,7 @@
             </div>
         </div>
 
-        <a class="button secondary export-button" href="{% url 'entry_export' %}?period={{ period }}">
+        <a class="button secondary export-button" href="{% url 'entry_export' %}?start_date={{ start_date|date:'Y-m-d' }}&end_date={{ end_date|date:'Y-m-d' }}">
             Экспортировать записи в CSV
         </a>
     </section>

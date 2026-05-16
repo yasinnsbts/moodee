@@ -90,6 +90,8 @@ def statistics_view(request):
 
     context = {
         "period": period,
+        "start_date": start_date,
+        "end_date": today,
         "period_title": period_title,
         "entries_count": entries.count(),
 
