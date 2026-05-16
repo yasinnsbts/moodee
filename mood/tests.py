@@ -130,3 +130,18 @@ class MoodEntryEditWindowTests(TestCase):
         response = self.client.get(f"/entries/{entry.pk}/edit/")
 
         self.assertRedirects(response, "/entries/")
+
+
+class SeedDemoDataCommandTests(TestCase):
+    def test_seed_demo_data_command_creates_demo_content(self):
+        from django.core.management import call_command
+
+        from practices.models import BreathingPractice
+
+        call_command("seed_demo_data")
+
+        user = User.objects.get(username="irina@example.com")
+
+        self.assertTrue(user.check_password("test12345"))
+        self.assertTrue(MoodEntry.objects.filter(user=user).exists())
+        self.assertTrue(BreathingPractice.objects.filter(is_active=True).exists())

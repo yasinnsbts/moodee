@@ -4,6 +4,7 @@ from django.utils import timezone
 
 from mood.models import MoodEntry
 from .services import build_weekly_report
+from .models import AIReport
 
 
 class WeeklyReportTests(TestCase):
@@ -58,3 +59,41 @@ class AIReportViewTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "AI-анализ отключён")
+
+
+class AIReportSnapshotTests(TestCase):
+    def test_ai_report_view_saves_report_snapshot(self):
+        from accounts.models import UserSettings
+
+        user = User.objects.create_user(
+            username="snapshot@example.com",
+            email="snapshot@example.com",
+            password="StrongPass12345!",
+        )
+        UserSettings.objects.create(
+            user=user,
+            ai_analysis_enabled=True,
+        )
+
+        today = timezone.localdate()
+
+        MoodEntry.objects.create(
+            user=user,
+            date=today,
+            mood_score=4,
+            wellbeing_score=4,
+            activity_score=3,
+            stress_score=2,
+            anxiety_score=2,
+            sleep_hours=7,
+            factors="сон, прогулка",
+            gratitude="хороший день",
+            note="спокойный день",
+        )
+
+        self.client.force_login(user)
+
+        response = self.client.get("/ai-report/")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(AIReport.objects.filter(user=user).exists())
