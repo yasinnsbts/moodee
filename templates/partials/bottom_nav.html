@@ -1,18 +1,21 @@
-<nav class="bottom-nav">
-    <a href="{% url 'dashboard' %}">
-        <span class="nav-icon">⌂</span>
-        <span class="nav-text">Главная</span>
+<nav class="bottom-nav" aria-label="Основная навигация">
+    <a class="bottom-nav-item" href="{% url 'dashboard' %}">
+        <span class="bottom-nav-icon">🏠</span>
+        <span class="bottom-nav-label">Главная</span>
     </a>
-    <a href="{% url 'statistics' %}">
-        <span class="nav-icon">◔</span>
-        <span class="nav-text">Статистика</span>
+
+    <a class="bottom-nav-item" href="{% url 'statistics' %}">
+        <span class="bottom-nav-icon">📊</span>
+        <span class="bottom-nav-label">Статистика</span>
     </a>
-    <a href="{% url 'practices' %}">
-        <span class="nav-icon">✦</span>
-        <span class="nav-text">Практики</span>
+
+    <a class="bottom-nav-item" href="{% url 'practices' %}">
+        <span class="bottom-nav-icon">✨</span>
+        <span class="bottom-nav-label">Практики</span>
     </a>
-    <a href="{% url 'profile' %}">
-        <span class="nav-icon">◯</span>
-        <span class="nav-text">Профиль</span>
+
+    <a class="bottom-nav-item" href="{% url 'profile' %}">
+        <span class="bottom-nav-icon">👤</span>
+        <span class="bottom-nav-label">Профиль</span>
     </a>
 </nav>
