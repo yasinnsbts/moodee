@@ -1,11 +1,8 @@
 {% extends "base.html" %}
-{% load static %}
-{% block page_class %}ai-report{% endblock %}
 
 {% block title %}Анализ недели — Ладно{% endblock %}
 
 {% block content %}
-<div class="app">
 <section class="screen ai-report-screen">
     <div class="dashboard-hero ai-report-hero">
         <div>
@@ -90,30 +87,6 @@
                 <h2>{{ average_sleep }} ч</h2>
             </div>
         {% endif %}
-
-        {% if average_stress %}
-            <p>Средний стресс: {{ average_stress }} / 5</p>
-        {% endif %}
-
-        {% if average_anxiety %}
-            <p>Средняя тревожность: {{ average_anxiety }} / 5</p>
-        {% endif %}
-
-        {% if average_sleep %}
-            <p>Средний сон: {{ average_sleep }} ч</p>
-        {% endif %}
-
-        {% if average_stress %}
-            <p>Средний стресс: {{ average_stress }} / 5</p>
-        {% endif %}
-
-        {% if average_anxiety %}
-            <p>Средняя тревожность: {{ average_anxiety }} / 5</p>
-        {% endif %}
-
-        {% if average_sleep %}
-            <p>Средний сон: {{ average_sleep }} ч</p>
-        {% endif %}
     </div>
 
     <div class="card ai-insights-card">
@@ -169,5 +142,4 @@
         Вернуться к практикам
     </a>
 </section>
-</div>
 {% endblock %}
