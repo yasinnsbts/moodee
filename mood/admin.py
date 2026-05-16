@@ -1,7 +1,5 @@
 from django.contrib import admin
 
-# Register your models here.
-from django.contrib import admin
 from .models import MoodEntry
 
 
@@ -13,7 +11,32 @@ class MoodEntryAdmin(admin.ModelAdmin):
         "mood_score",
         "wellbeing_score",
         "activity_score",
+        "stress_score",
+        "anxiety_score",
+        "sleep_hours",
         "created_at",
     )
-    list_filter = ("mood_score", "date")
-    search_fields = ("user__username", "user__email", "note")
+    list_filter = (
+        "date",
+        "mood_score",
+        "wellbeing_score",
+        "activity_score",
+        "stress_score",
+        "anxiety_score",
+    )
+    search_fields = (
+        "user__username",
+        "user__email",
+        "note",
+        "factors",
+        "gratitude",
+    )
+    readonly_fields = (
+        "created_at",
+        "updated_at",
+    )
+    date_hierarchy = "date"
+    ordering = (
+        "-date",
+        "-created_at",
+    )
