@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+{% load static %}
+{% block page_class %}entries{% endblock %}
+
+{% block title %}История записей — Ладно{% endblock %}
+
+{% block content %}
+<div class="app">
+<section class="screen entry-list-screen">
+    <div class="dashboard-hero entry-list-hero">
+        <div>
+            <p class="eyebrow">История</p>
+            <h1>История записей</h1>
+            <p class="hero-text">
+                Все ваши check-in записи в одном месте. Можно отфильтровать историю
+                по датам и настроению.
+            </p>
+                <span class="small">Редактирование закрыто</span>
+            {% endif %}
+            <a href="{% url 'entry_delete' entry.pk %}">🗑 Удалить</a>
+        </article>
+    {% empty %}
+        <div class="card">
+            <p>По выбранным фильтрам записей нет.</p>
+        </div>
+
+        <div class="hero-badge" aria-hidden="true">
+            <span>📖</span>
+        </div>
+    </div>
+
+    <div class="card entry-list-summary">
+        <div class="summary-item">
+            <span class="summary-label">Всего записей</span>
+            <strong>{{ entries_count }}</strong>
+        </div>
+
+        <div class="summary-item">
+            <span class="summary-label">Фильтр</span>
+            <strong>
+                {% if start_date or end_date or mood_score %}
+                    Применён
+                {% else %}
+                    Не применён
+                {% endif %}
+            </strong>
+        </div>
+    </div>
+
+    <div class="card entry-filter-card">
+        <div class="card-heading">
+            <div>
+                <p class="eyebrow">Фильтры</p>
+                <h2>Найти нужные записи</h2>
+            </div>
+            <p>
+                Выберите период или конкретную оценку настроения, чтобы быстрее найти
+                нужные дни.
+            </p>
+        </div>
+
+        <form class="entry-filter-form" method="get">
+            <label class="field">
+                <span>С даты</span>
+                <input type="date" name="start_date" value="{{ start_date }}">
+            </label>
+
+            <label class="field">
+                <span>По дату</span>
+                <input type="date" name="end_date" value="{{ end_date }}">
+            </label>
+
+            <label class="field entry-filter-mood">
+                <span>Настроение</span>
+                <select name="mood_score">
+                    <option value="">Любое</option>
+                    <option value="1" {% if mood_score == "1" %}selected{% endif %}>1 — Очень плохо</option>
+                    <option value="2" {% if mood_score == "2" %}selected{% endif %}>2 — Плохо</option>
+                    <option value="3" {% if mood_score == "3" %}selected{% endif %}>3 — Нейтрально</option>
+                    <option value="4" {% if mood_score == "4" %}selected{% endif %}>4 — Хорошо</option>
+                    <option value="5" {% if mood_score == "5" %}selected{% endif %}>5 — Отлично</option>
+                </select>
+            </label>
+
+            <div class="entry-filter-actions">
+                <button class="button primary" type="submit">
+                    Применить фильтр
+                </button>
+
+                <a class="button secondary entry-soft-button" href="{% url 'entry_list' %}">
+                    Сбросить
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <div class="entry-list-actions">
+        <a class="button primary" href="{% url 'entry_create' %}">
+            + Добавить запись
+        </a>
+
+        <a class="button secondary entry-soft-button" href="{% url 'entry_export' %}?start_date={{ start_date }}&end_date={{ end_date }}&mood_score={{ mood_score }}">
+            Экспорт CSV
+        </a>
+    </div>
+
+    <div class="entry-history-heading">
+        <div>
+            <p class="eyebrow entry-history-eyebrow">Записи</p>
+            <h2>Журнал check-in</h2>
+            <p class="entry-history-text">
+                Ниже отображаются записи с учётом выбранных фильтров.
+            </p>
+        </div>
+
+        <div class="journal-badge" aria-hidden="true">
+            <span>🗂️</span>
+        </div>
+    </div>
+
+    <div class="entry-history-list">
+        {% for entry in entries %}
+            <article class="card entry-card entry-history-card">
+                <div class="entry-top">
+                    <div>
+                        <p class="entry-date">{{ entry.date }}</p>
+                        <h3>{{ entry.emoji }} {{ entry.mood_score }}/5</h3>
+                    </div>
+                </div>
+
+                <div class="entry-details">
+                    <div class="entry-score-panel">
+                        <span class="entry-info-label">Показатели</span>
+
+                        <div class="entry-score-grid">
+                            <div class="entry-score-item">
+                                <span>Самочувствие</span>
+                                <strong>{{ entry.wellbeing_score }}/5</strong>
+                            </div>
+
+                            <div class="entry-score-item">
+                                <span>Активность</span>
+                                <strong>{{ entry.activity_score }}/5</strong>
+                            </div>
+
+                            <div class="entry-score-item">
+                                <span>Стресс</span>
+                                <strong>{{ entry.stress_score }}/5</strong>
+                            </div>
+
+                            <div class="entry-score-item">
+                                <span>Тревожность</span>
+                                <strong>{{ entry.anxiety_score }}/5</strong>
+                            </div>
+
+                            {% if entry.sleep_hours %}
+                                <div class="entry-score-item">
+                                    <span>Сон</span>
+                                    <strong>{{ entry.sleep_hours }} ч</strong>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {% if entry.factors %}
+                        <div class="entry-info-box entry-factors">
+                            <span class="entry-info-label">Факторы</span>
+                            <p>{{ entry.factors }}</p>
+                        </div>
+                    {% endif %}
+
+                    {% if entry.gratitude %}
+                        <div class="entry-info-box entry-gratitude">
+                            <span class="entry-info-label">Благодарность</span>
+                            <p>{{ entry.gratitude }}</p>
+                        </div>
+                    {% endif %}
+
+                    <div class="entry-info-box entry-note-box">
+                        <span class="entry-info-label">Заметка</span>
+                        <p>{{ entry.note|default:"Без заметки" }}</p>
+                    </div>
+                </div>
+
+                <div class="entry-actions">
+                    {% if entry.can_edit %}
+                        <a class="entry-action-btn edit-btn" href="{% url 'entry_update' entry.pk %}">
+                            ✎ Редактировать
+                        </a>
+                    {% else %}
+                        <span class="entry-action-disabled">
+                            Редактирование закрыто
+                        </span>
+                    {% endif %}
+
+                    <a class="entry-action-btn delete-btn" href="{% url 'entry_delete' entry.pk %}">
+                        🗑 Удалить
+                    </a>
+                </div>
+            </article>
+        {% empty %}
+            <div class="card empty-state entry-history-empty">
+                <p>По выбранным фильтрам записей нет.</p>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+</div>
+{% endblock %}

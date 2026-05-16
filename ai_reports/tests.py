@@ -35,3 +35,26 @@ class WeeklyReportTests(TestCase):
         self.assertIn("Сон", insight_text)
         self.assertIn("недосып", insight_text)
         self.assertTrue(report["recommendation"])
+
+
+class AIReportViewTests(TestCase):
+    def test_ai_report_returns_200_when_ai_analysis_disabled(self):
+        user = User.objects.create_user(
+            username="ai-disabled@example.com",
+            email="ai-disabled@example.com",
+            password="StrongPass12345!",
+        )
+
+        from accounts.models import UserSettings
+
+        UserSettings.objects.create(
+            user=user,
+            ai_analysis_enabled=False,
+        )
+
+        self.client.force_login(user)
+
+        response = self.client.get("/ai-report/")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "AI-анализ отключён")

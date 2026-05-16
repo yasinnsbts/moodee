@@ -89,7 +89,12 @@
   <div class="profile-actions">
     <a href="{% url 'password_change' %}" class="btn-secondary">Сменить пароль</a>
     <a href="{% url 'delete_account' %}" class="btn-danger">Удалить аккаунт</a>
-    <a href="{% url 'logout' %}" class="btn-outline">Выйти</a>
+    <form class="profile-logout-form" method="post" action="{% url 'logout' %}">
+    {% csrf_token %}
+    <button class="button secondary profile-action-button profile-soft-button" type="submit">
+        Выйти
+    </button>
+</form>
   </div>
 </div>
 </div>

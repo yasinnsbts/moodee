@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Новая запись — Ладно{% endblock %}
+
+{% block content %}
+<div class="app">
+    <section class="screen entry-form-screen">
+        <div class="dashboard-hero entry-form-hero">
+            <div>
+                <p class="eyebrow">Новая запись</p>
+                <h1>Как прошёл день?</h1>
+                <p class="hero-text">
+                    Заполните форму, чтобы сохранить запись. Все данные конфиденциальны
+                    и доступны только вам.
+                </p>
+            </div>
+=======
+{% block title %}{{ title }} — Ладно{% endblock %}
+
+{% block content %}
+<section class="screen">
+    <h1>{{ title }}</h1>
+    <p>{{ subtitle }}</p>
+    <p class="small">Заметка ограничена 400 символами.</p>
+
+            <div class="hero-badge" aria-hidden="true">
+                <span>📝</span>
+            </div>
+        </div>
+
+        {% if form.non_field_errors %}
+            <div class="message danger-message">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        {% for field in form %}
+            <label class="field">
+                <span>{{ field.label }}</span>
+                {{ field }}
+                {% if field.help_text %}
+                    <small>{{ field.help_text }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                    <small class="error">{{ error }}</small>
+                {% endfor %}
+            </label>
+        {% endfor %}
+
+        <form method="post" class="entry-form">
+            {% csrf_token %}
+            
+            <div class="card entry-form-card">
+                {% if form.errors %}
+                <div class="messages">
+                    {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                            <div class="message">{{ error }}</div>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- Настроение -->
+                <div class="field">
+                    <span class="entry-info-label">Настроение</span>
+                    <div class="emoji-choice-grid">
+                        {% for value, label in form.mood_score.field.choices %}
+                        <label class="emoji-choice-btn">
+                            <input type="radio" name="mood_score" value="{{ value }}" style="display: none;" {% if form.mood_score.value|stringformat:"s" == value|stringformat:"s" %}checked{% endif %}>
+                            <span class="emoji-choice-icon">
+                                {% if value == 1 %}😢{% elif value == 2 %}😕{% elif value == 3 %}😐{% elif value == 4 %}🙂{% else %}😊{% endif %}
+                            </span>
+                            <span class="emoji-choice-label">{{ label }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Оценки -->
+                <div class="score-choice-section">
+                    <div class="score-choice-block">
+                        <div class="score-choice-heading">
+                            <span>Самочувствие</span>
+                        </div>
+                        <div class="score-choice-grid">
+                            {% for i in "12345" %}
+                            <label class="score-choice-btn">
+                                <input type="radio" name="wellbeing_score" value="{{ i }}" style="display: none;" {% if form.wellbeing_score.value|stringformat:"s" == i %}checked{% endif %}>
+                                {{ i }}
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="score-choice-block">
+                        <div class="score-choice-heading">
+                            <span>Активность</span>
+                        </div>
+                        <div class="score-choice-grid">
+                            {% for i in "12345" %}
+                            <label class="score-choice-btn">
+                                <input type="radio" name="activity_score" value="{{ i }}" style="display: none;" {% if form.activity_score.value|stringformat:"s" == i %}checked{% endif %}>
+                                {{ i }}
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="score-choice-block">
+                        <div class="score-choice-heading">
+                            <span>Стресс</span>
+                        </div>
+                        <div class="score-choice-grid">
+                            {% for i in "12345" %}
+                            <label class="score-choice-btn">
+                                <input type="radio" name="stress_score" value="{{ i }}" style="display: none;" {% if form.stress_score.value|stringformat:"s" == i %}checked{% endif %}>
+                                {{ i }}
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="score-choice-block">
+                        <div class="score-choice-heading">
+                            <span>Тревожность</span>
+                        </div>
+                        <div class="score-choice-grid">
+                            {% for i in "12345" %}
+                            <label class="score-choice-btn">
+                                <input type="radio" name="anxiety_score" value="{{ i }}" style="display: none;" {% if form.anxiety_score.value|stringformat:"s" == i %}checked{% endif %}>
+                                {{ i }}
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Сон -->
+                <div class="input-group">
+                    <label for="{{ form.sleep_hours.id_for_label }}">Сон (часы)</label>
+                    <input type="number" name="sleep_hours" id="{{ form.sleep_hours.id_for_label }}" step="0.5" min="0" max="24" class="input-field" value="{{ form.sleep_hours.value|default:'' }}">
+                    <small class="help-text">Сколько часов вы спали?</small>
+                </div>
+
+                <!-- Факторы дня -->
+                <div class="input-group">
+                    <label for="{{ form.factors.id_for_label }}">Факторы дня</label>
+                    <textarea name="factors" id="{{ form.factors.id_for_label }}" class="input-field" rows="3" placeholder="Что повлияло на ваше состояние? (например, работа, спорт, погода, общение...)">{{ form.factors.value|default:'' }}</textarea>
+                    <small class="help-text">Что повлияло на ваше настроение?</small>
+                </div>
+
+                <!-- Благодарность -->
+                <div class="input-group">
+                    <label for="{{ form.gratitude.id_for_label }}">Благодарность</label>
+                    <textarea name="gratitude" id="{{ form.gratitude.id_for_label }}" class="input-field" rows="2" placeholder="За что вы благодарны сегодня?">{{ form.gratitude.value|default:'' }}</textarea>
+                    <small class="help-text">Заметили что-то хорошее?</small>
+                </div>
+
+                <!-- Заметка -->
+                <div class="input-group">
+                    <label for="{{ form.note.id_for_label }}">Заметка</label>
+                    <textarea name="note" id="{{ form.note.id_for_label }}" class="input-field" rows="3" placeholder="Дополнительные мысли... (до 400 символов)">{{ form.note.value|default:'' }}</textarea>
+                    <small class="help-text">Максимум 400 символов</small>
+                </div>
+
+                <!-- Кнопки действий -->
+                <div class="entry-form-actions">
+                    <button type="submit" class="btn-primary">Сохранить запись</button>
+                    <a href="{% url 'dashboard' %}" class="btn-secondary">Отмена</a>
+                </div>
+            </div>
+        </form>
+    </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Обработчики для выбора эмодзи
+    document.querySelectorAll('.emoji-choice-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.emoji-choice-btn').forEach(b => b.classList.remove('is-selected'));
+            btn.classList.add('is-selected');
+            const radio = btn.querySelector('input[type="radio"]');
+            if (radio) radio.checked = true;
+        });
+    });
+
+    // Обработчики для выбора оценок
+    document.querySelectorAll('.score-choice-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const parent = btn.closest('.score-choice-block');
+            parent.querySelectorAll('.score-choice-btn').forEach(b => b.classList.remove('is-selected'));
+            btn.classList.add('is-selected');
+            const radio = btn.querySelector('input[type="radio"]');
+            if (radio) radio.checked = true;
+        });
+    });
+
+    // Подсветка выбранных значений при загрузке
+    document.querySelectorAll('.emoji-choice-btn input:checked').forEach(radio => {
+        radio.closest('.emoji-choice-btn').classList.add('is-selected');
+    });
+
+    document.querySelectorAll('.score-choice-btn input:checked').forEach(radio => {
+        radio.closest('.score-choice-btn').classList.add('is-selected');
+    });
+</script>
+{% endblock %}
