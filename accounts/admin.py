@@ -1,7 +1,5 @@
 from django.contrib import admin
 
-# Register your models here.
-from django.contrib import admin
 from .models import UserSettings
 
 
@@ -13,4 +11,15 @@ class UserSettingsAdmin(admin.ModelAdmin):
         "reminder_enabled",
         "reminder_time",
         "ai_analysis_enabled",
+    )
+    list_filter = (
+        "theme",
+        "reminder_enabled",
+        "ai_analysis_enabled",
+    )
+    search_fields = (
+        "user__username",
+        "user__email",
+        "user__first_name",
+        "user__last_name",
     )

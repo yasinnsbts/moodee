@@ -10,7 +10,7 @@ from practices.models import BreathingPractice
 
 
 class Command(BaseCommand):
-    help = "Create demo data for Ладно"
+    help = "Create demo user, mood entries, user settings and breathing practices."
 
     def handle(self, *args, **options):
         user, created = User.objects.get_or_create(
@@ -24,55 +24,254 @@ class Command(BaseCommand):
         if created:
             user.set_password("test12345")
             user.save()
+            self.stdout.write(self.style.SUCCESS("Demo user created."))
+        else:
+            if user.email != "irina@example.com":
+                user.email = "irina@example.com"
+                user.save(update_fields=["email"])
 
-        UserSettings.objects.get_or_create(user=user)
+            self.stdout.write(self.style.WARNING("Demo user already exists."))
+
+        settings, _ = UserSettings.objects.get_or_create(user=user)
+        settings.reminder_enabled = True
+        settings.reminder_time = "20:30"
+        settings.ai_analysis_enabled = True
+        settings.save()
+
+        practices = [
+            {
+                "title": "Квадратное дыхание",
+                "description": "Простая практика для снижения напряжения и возвращения внимания к телу.",
+                "cycles": 4,
+                "duration_minutes": 4,
+                "instruction": "Вдохните на 4 счёта, задержите дыхание на 4, выдохните на 4 и снова задержите на 4.",
+                "is_active": True,
+            },
+            {
+                "title": "Дыхание 4–7–8",
+                "description": "Мягкая практика для вечернего успокоения и подготовки ко сну.",
+                "cycles": 4,
+                "duration_minutes": 5,
+                "instruction": "Вдохните на 4 счёта, задержите дыхание на 7, спокойно выдохните на 8.",
+                "is_active": True,
+            },
+            {
+                "title": "Спокойный выдох",
+                "description": "Практика для моментов тревоги: выдох делается длиннее вдоха.",
+                "cycles": 6,
+                "duration_minutes": 3,
+                "instruction": "Вдохните на 3 счёта и выдохните на 6. Повторите несколько циклов без напряжения.",
+                "is_active": True,
+            },
+            {
+                "title": "Пауза на тело",
+                "description": "Короткое упражнение, чтобы заметить состояние тела и немного замедлиться.",
+                "cycles": 5,
+                "duration_minutes": 2,
+                "instruction": "Сделайте спокойный вдох, на выдохе расслабьте плечи и челюсть. Повторите несколько раз.",
+                "is_active": True,
+            },
+        ]
+
+        for practice_data in practices:
+            practice, practice_created = BreathingPractice.objects.update_or_create(
+                title=practice_data["title"],
+                defaults=practice_data,
+            )
+
+            if practice_created:
+                self.stdout.write(
+                    self.style.SUCCESS(f"Practice created: {practice.title}")
+                )
+            else:
+                self.stdout.write(
+                    self.style.WARNING(f"Practice updated: {practice.title}")
+                )
 
         today = timezone.localdate()
 
-        demo_entries = [
-            (0, 4, 4, 3, 2, 2, 7.5, "прогулка, отдых", "Вечер без спешки", "Спокойный день, помогла прогулка у реки."),
-            (1, 5, 5, 4, 2, 1, 8.0, "сон, команда, общение", "Удачная встреча", "Удачная встреча с командой и хороший сон."),
-            (2, 3, 3, 3, 3, 3, 6.5, "работа, задачи", "Закрыла важную задачу", "Много задач, но без сильного стресса."),
-            (3, 2, 2, 2, 5, 4, 5.5, "работа, недосып", "Тёплый чай вечером", "Устала после работы, было сложно сосредоточиться."),
-            (4, 4, 4, 4, 2, 2, 7.0, "музыка, прогулка", "Хорошая музыка", "Хороший день, помогла музыка и прогулка."),
-            (5, 3, 3, 2, 3, 3, 6.0, "дом, усталость", "Пауза днём", "Обычный день, немного не хватало энергии."),
-            (6, 5, 4, 5, 1, 1, 8.0, "спорт, вечер, общение", "Приятный вечер", "Много активности и приятный вечер."),
+        entries = [
+            {
+                "days_ago": 13,
+                "mood_score": 3,
+                "wellbeing_score": 3,
+                "activity_score": 2,
+                "stress_score": 4,
+                "anxiety_score": 3,
+                "sleep_hours": 6.0,
+                "factors": "работа, дедлайн",
+                "gratitude": "Вечерняя прогулка",
+                "note": "День был напряжённый, но удалось немного переключиться вечером.",
+            },
+            {
+                "days_ago": 12,
+                "mood_score": 4,
+                "wellbeing_score": 4,
+                "activity_score": 4,
+                "stress_score": 2,
+                "anxiety_score": 2,
+                "sleep_hours": 7.5,
+                "factors": "сон, прогулка",
+                "gratitude": "Хороший сон",
+                "note": "Больше энергии после нормального сна.",
+            },
+            {
+                "days_ago": 11,
+                "mood_score": 2,
+                "wellbeing_score": 2,
+                "activity_score": 2,
+                "stress_score": 5,
+                "anxiety_score": 4,
+                "sleep_hours": 5.5,
+                "factors": "работа, усталость",
+                "gratitude": "Поддержка близких",
+                "note": "Сложный день, много задач и мало отдыха.",
+            },
+            {
+                "days_ago": 10,
+                "mood_score": 3,
+                "wellbeing_score": 3,
+                "activity_score": 3,
+                "stress_score": 3,
+                "anxiety_score": 3,
+                "sleep_hours": 6.5,
+                "factors": "учёба, дорога",
+                "gratitude": "Получилось закрыть часть задач",
+                "note": "Обычный день без сильных провалов.",
+            },
+            {
+                "days_ago": 9,
+                "mood_score": 4,
+                "wellbeing_score": 4,
+                "activity_score": 5,
+                "stress_score": 2,
+                "anxiety_score": 2,
+                "sleep_hours": 7.0,
+                "factors": "спорт, прогулка",
+                "gratitude": "Хорошая тренировка",
+                "note": "Движение хорошо повлияло на настроение.",
+            },
+            {
+                "days_ago": 8,
+                "mood_score": 3,
+                "wellbeing_score": 4,
+                "activity_score": 3,
+                "stress_score": 3,
+                "anxiety_score": 2,
+                "sleep_hours": 7.0,
+                "factors": "дом, отдых",
+                "gratitude": "Спокойный вечер",
+                "note": "Удалось восстановиться после недели.",
+            },
+            {
+                "days_ago": 7,
+                "mood_score": 5,
+                "wellbeing_score": 5,
+                "activity_score": 4,
+                "stress_score": 1,
+                "anxiety_score": 1,
+                "sleep_hours": 8.0,
+                "factors": "отдых, семья",
+                "gratitude": "День без спешки",
+                "note": "Очень хороший день, спокойно и приятно.",
+            },
+            {
+                "days_ago": 6,
+                "mood_score": 4,
+                "wellbeing_score": 4,
+                "activity_score": 3,
+                "stress_score": 2,
+                "anxiety_score": 2,
+                "sleep_hours": 7.5,
+                "factors": "сон, работа",
+                "gratitude": "Понятный план на день",
+                "note": "Рабочий день прошёл ровно.",
+            },
+            {
+                "days_ago": 5,
+                "mood_score": 3,
+                "wellbeing_score": 3,
+                "activity_score": 3,
+                "stress_score": 4,
+                "anxiety_score": 3,
+                "sleep_hours": 6.0,
+                "factors": "дедлайн, учёба",
+                "gratitude": "Помощь команды",
+                "note": "Было напряжение из-за сроков.",
+            },
+            {
+                "days_ago": 4,
+                "mood_score": 4,
+                "wellbeing_score": 4,
+                "activity_score": 4,
+                "stress_score": 2,
+                "anxiety_score": 2,
+                "sleep_hours": 7.0,
+                "factors": "прогулка, спорт",
+                "gratitude": "Свежий воздух",
+                "note": "Прогулка помогла разгрузить голову.",
+            },
+            {
+                "days_ago": 3,
+                "mood_score": 2,
+                "wellbeing_score": 3,
+                "activity_score": 2,
+                "stress_score": 5,
+                "anxiety_score": 4,
+                "sleep_hours": 5.0,
+                "factors": "работа, мало сна",
+                "gratitude": "Удалось лечь раньше",
+                "note": "Сильно сказался недосып.",
+            },
+            {
+                "days_ago": 2,
+                "mood_score": 3,
+                "wellbeing_score": 3,
+                "activity_score": 3,
+                "stress_score": 3,
+                "anxiety_score": 3,
+                "sleep_hours": 6.5,
+                "factors": "дом, дела",
+                "gratitude": "Тихий вечер",
+                "note": "День был нейтральный.",
+            },
+            {
+                "days_ago": 1,
+                "mood_score": 4,
+                "wellbeing_score": 4,
+                "activity_score": 4,
+                "stress_score": 2,
+                "anxiety_score": 2,
+                "sleep_hours": 7.5,
+                "factors": "сон, прогулка, семья",
+                "gratitude": "Хороший разговор",
+                "note": "Настроение стало лучше после общения и прогулки.",
+            },
+            {
+                "days_ago": 0,
+                "mood_score": 4,
+                "wellbeing_score": 4,
+                "activity_score": 3,
+                "stress_score": 2,
+                "anxiety_score": 2,
+                "sleep_hours": 7.0,
+                "factors": "работа, порядок",
+                "gratitude": "Удалось многое сделать",
+                "note": "Спокойный продуктивный день.",
+            },
         ]
 
-        for days_ago, mood, wellbeing, activity, stress, anxiety, sleep, factors, gratitude, note in demo_entries:
+        for entry_data in entries:
+            entry_date = today - timedelta(days=entry_data.pop("days_ago"))
+
             MoodEntry.objects.update_or_create(
                 user=user,
-                date=today - timedelta(days=days_ago),
-                defaults={
-                    "mood_score": mood,
-                    "wellbeing_score": wellbeing,
-                    "activity_score": activity,
-                    "stress_score": stress,
-                    "anxiety_score": anxiety,
-                    "sleep_hours": sleep,
-                    "factors": factors,
-                    "gratitude": gratitude,
-                    "note": note,
-                },
+                date=entry_date,
+                defaults=entry_data,
             )
 
-        practices = [
-            ("Квадратное дыхание", "Мягкая практика для стабилизации состояния.", 4, 2),
-            ("Техника 4–7–8", "Практика для вечернего расслабления.", 3, 4),
-            ("Успокаивающее дыхание", "Короткая техника для снижения напряжения.", 5, 3),
-        ]
-
-        for title, description, cycles, duration in practices:
-            BreathingPractice.objects.update_or_create(
-                title=title,
-                defaults={
-                    "description": description,
-                    "cycles": cycles,
-                    "duration_minutes": duration,
-                    "instruction": "Сядьте удобно, включите спокойный темп и отслеживайте ощущения без оценки.",
-                    "is_active": True,
-                },
+        self.stdout.write(
+            self.style.SUCCESS(
+                "Demo data is ready. Login: irina@example.com / test12345"
             )
-
-        self.stdout.write(self.style.SUCCESS("Demo data created."))
-        self.stdout.write("Demo user: irina@example.com / test12345")
+        )
