@@ -163,7 +163,7 @@ def entry_export_view(request):
 @login_required
 def entry_create_view(request):
     if request.method == "POST":
-        form = MoodEntryForm(request.POST)
+        form = MoodEntryForm(request.POST, user=request.user)
 
         if form.is_valid():
             entry = form.save(commit=False)
@@ -173,7 +173,7 @@ def entry_create_view(request):
             messages.success(request, "Запись сохранена.")
             return redirect("dashboard")
     else:
-        form = MoodEntryForm(initial={"date": timezone.localdate()})
+        form = MoodEntryForm(initial={"date": timezone.localdate()}, user=request.user)
 
     return render(
         request,
@@ -198,14 +198,14 @@ def entry_update_view(request, pk):
         return redirect("entry_list")
 
     if request.method == "POST":
-        form = MoodEntryForm(request.POST, instance=entry)
+        form = MoodEntryForm(request.POST, instance=entry, user=request.user)
 
         if form.is_valid():
             form.save()
             messages.success(request, "Запись обновлена.")
             return redirect("dashboard")
     else:
-        form = MoodEntryForm(instance=entry)
+        form = MoodEntryForm(instance=entry, user=request.user)
 
     return render(
         request,
