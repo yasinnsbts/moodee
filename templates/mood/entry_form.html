@@ -6,118 +6,285 @@
 <section class="screen entry-form-screen">
     <div class="dashboard-hero entry-form-hero">
         <div>
-            <p class="eyebrow">Дневник</p>
+            <p class="eyebrow">Check-in</p>
             <h1>{{ title }}</h1>
             <p class="hero-text">{{ subtitle }}</p>
         </div>
 
-        <div class="hero-badge">✍️</div>
+        <div class="hero-badge" aria-hidden="true">
+            <span>🌤️</span>
+        </div>
     </div>
 
     <form class="form entry-form" method="post">
         {% csrf_token %}
 
+        {% if form.non_field_errors %}
+            <div class="message danger-message">{{ form.non_field_errors }}</div>
+        {% endif %}
+
         <div class="card entry-form-card">
-            <h2>Оценки состояния</h2>
-
-            {% if form.non_field_errors %}
-                <div class="message danger-message">
-                    {{ form.non_field_errors }}
+            <div class="card-heading">
+                <div>
+                    <p class="eyebrow">Настроение</p>
+                    <h2>Как вы себя чувствуете?</h2>
                 </div>
-            {% endif %}
-
-            <label class="field">
-                <span>Дата</span>
-                {{ form.date }}
-                {% if form.date.errors %}
-                    <small class="error">{{ form.date.errors }}</small>
-                {% endif %}
-            </label>
-
-            <label class="field">
-                <span>Настроение</span>
-                {{ form.mood_score }}
-                {% if form.mood_score.errors %}
-                    <small class="error">{{ form.mood_score.errors }}</small>
-                {% endif %}
-            </label>
-
-            <div class="score-choice-section">
-                <label class="field score-choice-block">
-                    <span>Самочувствие</span>
-                    {{ form.wellbeing_score }}
-                    {% if form.wellbeing_score.errors %}
-                        <small class="error">{{ form.wellbeing_score.errors }}</small>
-                    {% endif %}
-                </label>
-
-                <label class="field score-choice-block">
-                    <span>Активность</span>
-                    {{ form.activity_score }}
-                    {% if form.activity_score.errors %}
-                        <small class="error">{{ form.activity_score.errors }}</small>
-                    {% endif %}
-                </label>
-
-                <label class="field score-choice-block">
-                    <span>Стресс</span>
-                    {{ form.stress_score }}
-                    {% if form.stress_score.errors %}
-                        <small class="error">{{ form.stress_score.errors }}</small>
-                    {% endif %}
-                </label>
-
-                <label class="field score-choice-block">
-                    <span>Тревожность</span>
-                    {{ form.anxiety_score }}
-                    {% if form.anxiety_score.errors %}
-                        <small class="error">{{ form.anxiety_score.errors }}</small>
-                    {% endif %}
-                </label>
+                <p>
+                    Выберите один вариант. Это основная оценка дня, которая будет
+                    отображаться в журнале.
+                </p>
             </div>
 
-            <label class="field">
-                <span>Сон, часов</span>
-                {{ form.sleep_hours }}
-                {% if form.sleep_hours.errors %}
-                    <small class="error">{{ form.sleep_hours.errors }}</small>
-                {% endif %}
-            </label>
+            <input
+                type="hidden"
+                name="mood_score"
+                id="id_mood_score"
+                value="{{ form.mood_score.value|default:'' }}"
+            >
+
+            <div class="emoji-choice-grid" data-choice-group="mood_score">
+                <button class="emoji-choice-btn mood-1" type="button" data-value="1">
+                    <span class="emoji-choice-icon">😢</span>
+                    <span class="emoji-choice-label">Очень плохо</span>
+                </button>
+
+                <button class="emoji-choice-btn mood-2" type="button" data-value="2">
+                    <span class="emoji-choice-icon">😕</span>
+                    <span class="emoji-choice-label">Плохо</span>
+                </button>
+
+                <button class="emoji-choice-btn mood-3" type="button" data-value="3">
+                    <span class="emoji-choice-icon">😐</span>
+                    <span class="emoji-choice-label">Нормально</span>
+                </button>
+
+                <button class="emoji-choice-btn mood-4" type="button" data-value="4">
+                    <span class="emoji-choice-icon">🙂</span>
+                    <span class="emoji-choice-label">Хорошо</span>
+                </button>
+
+                <button class="emoji-choice-btn mood-5" type="button" data-value="5">
+                    <span class="emoji-choice-icon">😍</span>
+                    <span class="emoji-choice-label">Отлично</span>
+                </button>
+            </div>
+
+            {% for error in form.mood_score.errors %}
+                <small class="error">{{ error }}</small>
+            {% endfor %}
         </div>
 
         <div class="card entry-form-card">
-            <h2>Короткие заметки</h2>
+            <div class="card-heading">
+                <div>
+                    <p class="eyebrow">Показатели</p>
+                    <h2>Оценки от 1 до 5</h2>
+                </div>
+                <p>
+                    Отметьте самочувствие, активность, стресс и тревожность.
+                    Кнопки удобнее для смартфона и не выглядят как стандартные radio.
+                </p>
+            </div>
+
+            <div class="score-choice-section">
+                <div class="score-choice-block">
+                    <div class="score-choice-heading">
+                        <span>Самочувствие</span>
+                    </div>
+
+                    <input
+                        type="hidden"
+                        name="wellbeing_score"
+                        id="id_wellbeing_score"
+                        value="{{ form.wellbeing_score.value|default:'' }}"
+                    >
+
+                    <div class="score-choice-grid" data-choice-group="wellbeing_score">
+                        <button class="score-choice-btn" type="button" data-value="1">1</button>
+                        <button class="score-choice-btn" type="button" data-value="2">2</button>
+                        <button class="score-choice-btn" type="button" data-value="3">3</button>
+                        <button class="score-choice-btn" type="button" data-value="4">4</button>
+                        <button class="score-choice-btn" type="button" data-value="5">5</button>
+                    </div>
+
+                    {% for error in form.wellbeing_score.errors %}
+                        <small class="error">{{ error }}</small>
+                    {% endfor %}
+                </div>
+
+                <div class="score-choice-block">
+                    <div class="score-choice-heading">
+                        <span>Активность</span>
+                    </div>
+
+                    <input
+                        type="hidden"
+                        name="activity_score"
+                        id="id_activity_score"
+                        value="{{ form.activity_score.value|default:'' }}"
+                    >
+
+                    <div class="score-choice-grid" data-choice-group="activity_score">
+                        <button class="score-choice-btn" type="button" data-value="1">1</button>
+                        <button class="score-choice-btn" type="button" data-value="2">2</button>
+                        <button class="score-choice-btn" type="button" data-value="3">3</button>
+                        <button class="score-choice-btn" type="button" data-value="4">4</button>
+                        <button class="score-choice-btn" type="button" data-value="5">5</button>
+                    </div>
+
+                    {% for error in form.activity_score.errors %}
+                        <small class="error">{{ error }}</small>
+                    {% endfor %}
+                </div>
+
+                <div class="score-choice-block">
+                    <div class="score-choice-heading">
+                        <span>Стресс</span>
+                    </div>
+
+                    <input
+                        type="hidden"
+                        name="stress_score"
+                        id="id_stress_score"
+                        value="{{ form.stress_score.value|default:'' }}"
+                    >
+
+                    <div class="score-choice-grid" data-choice-group="stress_score">
+                        <button class="score-choice-btn" type="button" data-value="1">1</button>
+                        <button class="score-choice-btn" type="button" data-value="2">2</button>
+                        <button class="score-choice-btn" type="button" data-value="3">3</button>
+                        <button class="score-choice-btn" type="button" data-value="4">4</button>
+                        <button class="score-choice-btn" type="button" data-value="5">5</button>
+                    </div>
+
+                    {% for error in form.stress_score.errors %}
+                        <small class="error">{{ error }}</small>
+                    {% endfor %}
+                </div>
+
+                <div class="score-choice-block">
+                    <div class="score-choice-heading">
+                        <span>Тревожность</span>
+                    </div>
+
+                    <input
+                        type="hidden"
+                        name="anxiety_score"
+                        id="id_anxiety_score"
+                        value="{{ form.anxiety_score.value|default:'' }}"
+                    >
+
+                    <div class="score-choice-grid" data-choice-group="anxiety_score">
+                        <button class="score-choice-btn" type="button" data-value="1">1</button>
+                        <button class="score-choice-btn" type="button" data-value="2">2</button>
+                        <button class="score-choice-btn" type="button" data-value="3">3</button>
+                        <button class="score-choice-btn" type="button" data-value="4">4</button>
+                        <button class="score-choice-btn" type="button" data-value="5">5</button>
+                    </div>
+
+                    {% for error in form.anxiety_score.errors %}
+                        <small class="error">{{ error }}</small>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="card entry-form-card">
+            <div class="card-heading">
+                <div>
+                    <p class="eyebrow">Детали</p>
+                    <h2>Сон, факторы и заметки</h2>
+                </div>
+                <p>
+                    Добавьте контекст: что повлияло на день, за что вы благодарны
+                    и что хочется сохранить в заметках.
+                </p>
+            </div>
 
             <div class="entry-text-fields">
+            {% if form.date %}
                 <label class="field">
-                    <span>Факторы</span>
-                    {{ form.factors }}
-                    {% if form.factors.errors %}
-                        <small class="error">{{ form.factors.errors }}</small>
-                    {% endif %}
-                </label>
+                    <span>{{ form.date.label }}</span>
+                    {{ form.date }}
 
-                <label class="field">
-                    <span>Благодарность</span>
-                    {{ form.gratitude }}
-                    {% if form.gratitude.errors %}
-                        <small class="error">{{ form.gratitude.errors }}</small>
+                    {% if form.date.help_text %}
+                        <small>{{ form.date.help_text }}</small>
                     {% endif %}
-                </label>
 
-                <label class="field">
-                    <span>Заметка</span>
-                    {{ form.note }}
-                    {% if form.note.errors %}
-                        <small class="error">{{ form.note.errors }}</small>
-                    {% endif %}
+                    {% for error in form.date.errors %}
+                        <small class="error">{{ error }}</small>
+                    {% endfor %}
                 </label>
+            {% endif %}
+
+                {% if form.sleep_hours %}
+                    <label class="field">
+                        <span>{{ form.sleep_hours.label }}</span>
+                        {{ form.sleep_hours }}
+
+                        {% if form.sleep_hours.help_text %}
+                            <small>{{ form.sleep_hours.help_text }}</small>
+                        {% endif %}
+
+                        {% for error in form.sleep_hours.errors %}
+                            <small class="error">{{ error }}</small>
+                        {% endfor %}
+                    </label>
+                {% endif %}
+
+                {% if form.factors %}
+                    <label class="field">
+                        <span>{{ form.factors.label }}</span>
+                        {{ form.factors }}
+
+                        {% if form.factors.help_text %}
+                            <small>{{ form.factors.help_text }}</small>
+                        {% endif %}
+
+                        {% for error in form.factors.errors %}
+                            <small class="error">{{ error }}</small>
+                        {% endfor %}
+                    </label>
+                {% endif %}
+
+                {% if form.gratitude %}
+                    <label class="field">
+                        <span>{{ form.gratitude.label }}</span>
+                        {{ form.gratitude }}
+
+                        {% if form.gratitude.help_text %}
+                            <small>{{ form.gratitude.help_text }}</small>
+                        {% endif %}
+
+                        {% for error in form.gratitude.errors %}
+                            <small class="error">{{ error }}</small>
+                        {% endfor %}
+                    </label>
+                {% endif %}
+
+                {% if form.note %}
+                    <label class="field">
+                        <span>{{ form.note.label }}</span>
+                        {{ form.note }}
+
+                        {% if form.note.help_text %}
+                            <small>{{ form.note.help_text }}</small>
+                        {% endif %}
+
+                        {% for error in form.note.errors %}
+                            <small class="error">{{ error }}</small>
+                        {% endfor %}
+                    </label>
+                {% endif %}
             </div>
         </div>
 
         <div class="entry-form-actions">
-            <button class="primary" type="submit">Сохранить</button>
-            <a class="button secondary" href="{% url 'dashboard' %}">Отмена</a>
+            <button class="button primary" type="submit">Сохранить</button>
+
+            <a class="button secondary entry-soft-button" href="{% url 'dashboard' %}">
+                Отмена
+            </a>
 
             {% if entry %}
                 <a class="button danger entry-delete-main" href="{% url 'entry_delete' entry.pk %}">
@@ -127,4 +294,42 @@
         </div>
     </form>
 </section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function setupChoiceGroup(groupName) {
+        const group = document.querySelector(`[data-choice-group="${groupName}"]`);
+        const input = document.querySelector(`#id_${groupName}`);
+
+        if (!group || !input) {
+            return;
+        }
+
+        const buttons = group.querySelectorAll("button[data-value]");
+
+        function setActiveButton(value) {
+            buttons.forEach((button) => {
+                button.classList.toggle("is-selected", button.dataset.value === value);
+            });
+        }
+
+        buttons.forEach((button) => {
+            button.addEventListener("click", () => {
+                input.value = button.dataset.value;
+                setActiveButton(button.dataset.value);
+            });
+        });
+
+        if (input.value) {
+            setActiveButton(input.value);
+        }
+    }
+
+    setupChoiceGroup("mood_score");
+    setupChoiceGroup("wellbeing_score");
+    setupChoiceGroup("activity_score");
+    setupChoiceGroup("stress_score");
+    setupChoiceGroup("anxiety_score");
+</script>
 {% endblock %}

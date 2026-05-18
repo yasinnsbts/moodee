@@ -1,43 +1,58 @@
 {% extends "base.html" %}
-{% load static %}
-{% block page_class %}delete-account{% endblock %}
 
 {% block title %}Удаление аккаунта — Ладно{% endblock %}
 
 {% block content %}
-<div class="app">
-<div class="glass-card danger-card" style="max-width: 550px; margin: 0 auto;">
-  <div class="logo-area">
-    <div class="logo-icon">
-      <img src="{% static 'images/logo.png' %}" alt="Ладно">
-    </div>
-    <h2>Удаление аккаунта</h2>
-    <div class="subhead">Это действие необратимо</div>
-  </div>
+<section class="screen delete-account-screen">
+    <div class="dashboard-hero delete-account-hero">
+        <div>
+            <p class="eyebrow">Аккаунт</p>
+            <h1>Удалить аккаунт?</h1>
+            <p class="hero-text">
+                Это действие нельзя отменить. Аккаунт и связанные с ним данные будут удалены.
+            </p>
+        </div>
 
-  <div class="warning-message">
-    <p><strong>Внимание!</strong> Вы собираетесь навсегда удалить свой аккаунт и все связанные с ним данные:</p>
-    <ul>
-      <li>Историю настроений</li>
-      <li>Заметки и практики</li>
-      <li>Личные настройки</li>
-    </ul>
-    <p>Это действие <strong>нельзя будет отменить</strong>.</p>
-  </div>
+        <div class="hero-badge delete-account-badge" aria-hidden="true">
+            <span>🗑️</span>
+        </div>
+    </div>
 
-  <form method="post">
-    {% csrf_token %}
-    
-    <div class="input-group">
-      <label for="confirm_text">Введите <strong>УДАЛИТЬ</strong> для подтверждения</label>
-      <input class="input-field" type="text" id="confirm_text" name="confirm_text" placeholder="УДАЛИТЬ" required>
+    <div class="card delete-account-card">
+        <div class="delete-account-main">
+            <div class="delete-warning-icon" aria-hidden="true">
+                !
+            </div>
+
+            <div>
+                <p class="eyebrow">Подтверждение</p>
+                <h2>Удаление профиля</h2>
+                <p>
+                    Вы уверены, что хотите удалить аккаунт? После удаления восстановить
+                    историю записей, статистику и настройки профиля будет невозможно.
+                </p>
+            </div>
+        </div>
+
+        <div class="delete-account-note">
+            <div class="delete-account-note-icon" aria-hidden="true">i</div>
+            <p>
+                Если вы просто хотите прекратить работу с приложением, можно выйти из аккаунта
+                вместо удаления профиля.
+            </p>
+        </div>
+
+        <form class="delete-account-form" method="post">
+            {% csrf_token %}
+
+            <button class="button danger delete-account-button" type="submit">
+                Да, удалить аккаунт
+            </button>
+
+            <a class="button secondary delete-account-cancel" href="{% url 'profile' %}">
+                Отмена
+            </a>
+        </form>
     </div>
-    
-    <div class="button-group-danger">
-      <button type="submit" class="btn-danger">Да, удалить мой аккаунт</button>
-      <a href="{% url 'profile' %}" class="btn-secondary">Отмена</a>
-    </div>
-  </form>
-</div>
-</div>
+</section>
 {% endblock %}

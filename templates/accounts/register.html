@@ -4,47 +4,62 @@
 {% block title %}Регистрация — Ладно{% endblock %}
 
 {% block content %}
-<div class="auth-container">
-    <div class="auth-wrapper">
-        <div class="glass-card">
-          <div class="logo-area">
-             <div class="logo-icon">
-               <img src="{% static 'images/logo.png' %}" alt="Ладно">
+<section class="screen auth-screen register-screen">
+    <div class="card auth-card">
+        <div class="auth-logo-area">
+            <div class="auth-logo-wrap">
+                <img src="{% static 'images/logo.png' %}" alt="Ладно" class="auth-logo">
             </div>
-            <h2>Регистрация</h2>
-            <div class="subhead">Создайте аккаунт, чтобы сохранять историю</div>
-          </div>
 
-          <form method="post">
+            <div>
+                <p class="eyebrow">Регистрация</p>
+                <h1>Создать аккаунт</h1>
+                <p>
+                    Зарегистрируйтесь, чтобы сохранять историю check-in, смотреть динамику
+                    настроения и получать недельные инсайты.
+                </p>
+            </div>
+        </div>
+
+        <form class="form auth-form register-form" method="post">
             {% csrf_token %}
-    
-            {% if form.errors %}
-            <div class="messages">
-              {% for field, errors in form.errors.items %}
-                {% for error in errors %}
-                  <div class="message">{{ error }}</div>
-                {% endfor %}
-              {% endfor %}
-            </div>
-            {% endif %}
-    
-            {% for field in form %}
-            <div class="input-group">
-              <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-              {{ field }}
-              {% if field.help_text %}
-                <small class="help-text">{{ field.help_text }}</small>
-              {% endif %}
-            </div>
-            {% endfor %}
-    
-            <button type="submit" class="btn-primary">Зарегистрироваться</button>
-          </form>
 
-          <div class="footer-action">
-            Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a>
-          </div>
-       </div>
+            {% if form.errors %}
+                <div class="messages">
+                    {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                            <div class="message danger-message">{{ error }}</div>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="auth-form-fields">
+                {% for field in form %}
+                    <label class="field">
+                        <span>{{ field.label }}</span>
+                        {{ field }}
+
+                        {% if field.help_text %}
+                            <small>{{ field.help_text }}</small>
+                        {% endif %}
+
+                        {% for error in field.errors %}
+                            <small class="error">{{ error }}</small>
+                        {% endfor %}
+                    </label>
+                {% endfor %}
+            </div>
+
+            <button type="submit" class="button primary auth-submit-button">
+                Зарегистрироваться
+            </button>
+        </form>
+
+        <div class="auth-footer-action">
+            <span>Уже есть аккаунт?</span>
+            <a href="{% url 'login' %}">Войти</a>
+        </div>
     </div>
-</div>
+</section>
 {% endblock %}
