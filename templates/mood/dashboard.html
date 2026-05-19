@@ -155,18 +155,20 @@
             </div>
 
             <div class="entry-actions">
-                {% if entry.can_edit %}
-                    <a class="entry-action-btn edit-btn" href="{% url 'entry_update' entry.pk %}">
-                        ✎ Редактировать
-                    </a>
-                {% else %}
-                    <span class="entry-action-disabled">Редактирование закрыто</span>
-                {% endif %}
+    {% if entry.can_be_modified %}
+        <a href="{% url 'entry_update' entry.pk %}" class="entry-action-btn edit-btn">
+            Редактировать
+        </a>
 
-                <a class="entry-action-btn delete-btn" href="{% url 'entry_delete' entry.pk %}">
-                    🗑 Удалить
-                </a>
-            </div>
+        <a href="{% url 'entry_delete' entry.pk %}" class="entry-action-btn delete-btn">
+            Удалить
+        </a>
+    {% else %}
+        <span class="entry-action-disabled">
+            Редактирование закрыто
+        </span>
+    {% endif %}
+</div>
         </article>
     {% empty %}
         <div class="card empty-card">

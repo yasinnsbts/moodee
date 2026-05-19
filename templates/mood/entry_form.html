@@ -287,9 +287,13 @@
             </a>
 
             {% if entry %}
+                {% if entry.can_be_modified %}
                 <a class="button danger entry-delete-main" href="{% url 'entry_delete' entry.pk %}">
                     Удалить запись
                 </a>
+                {% else %}
+                <span class="entry-action-disabled">Редактирование закрыто</span>
+                {% endif %}
             {% endif %}
         </div>
     </form>
