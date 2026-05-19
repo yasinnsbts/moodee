@@ -126,6 +126,29 @@ class MoodEntry(models.Model):
             if factor.strip()
         ]
 
+
+    def can_be_modified(self):
+        """
+        Запись можно редактировать или удалять только в течение 24 часов
+        после момента создания.
+        """
+        if not self.created_at:
+            return True
+
+        return timezone.now() <= self.created_at + timedelta(hours=24)
+
+    @property
+    def is_editable(self):
+        return self.can_be_modified()
+
+    @property
+    def can_edit(self):
+        return self.can_be_modified()
+
+    @property
+    def can_delete(self):
+        return self.can_be_modified()
+
     def __str__(self):
         return f"{self.user} — {self.date} — {self.mood_score}/5"
 

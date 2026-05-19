@@ -195,6 +195,13 @@ def entry_create_view(request):
 def entry_update_view(request, pk):
     entry = get_object_or_404(MoodEntry, pk=pk, user=request.user)
 
+    if not entry.can_be_modified():
+        messages.error(
+            request,
+            "Редактирование записи доступно только в течение 24 часов после создания.",
+        )
+        return redirect("entry_list")
+
     if not entry.can_edit:
         messages.error(
             request,
@@ -227,6 +234,13 @@ def entry_update_view(request, pk):
 @login_required
 def entry_delete_view(request, pk):
     entry = get_object_or_404(MoodEntry, pk=pk, user=request.user)
+
+    if not entry.can_be_modified():
+        messages.error(
+            request,
+            "Удаление записи доступно только в течение 24 часов после создания.",
+        )
+        return redirect("entry_list")
 
     if request.method == "POST":
         entry.delete()

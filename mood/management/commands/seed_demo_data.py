@@ -261,14 +261,20 @@ class Command(BaseCommand):
             },
         ]
 
-        for entry_data in entries:
-            entry_date = today - timedelta(days=entry_data.pop("days_ago"))
+        for raw_entry_data in entries:
+            entry_data = raw_entry_data.copy()
+            days_ago = entry_data.pop("days_ago")
+            entry_date = today - timedelta(days=days_ago)
 
-            MoodEntry.objects.update_or_create(
+            entry, _ = MoodEntry.objects.update_or_create(
                 user=user,
                 date=entry_date,
                 defaults=entry_data,
             )
+
+            if days_ago > 0:
+                demo_created_at = timezone.now() - timedelta(days=days_ago, hours=1)
+                MoodEntry.objects.filter(pk=entry.pk).update(created_at=demo_created_at)
 
         self.stdout.write(
             self.style.SUCCESS(

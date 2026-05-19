@@ -145,3 +145,81 @@ class SeedDemoDataCommandTests(TestCase):
         self.assertTrue(user.check_password("test12345"))
         self.assertTrue(MoodEntry.objects.filter(user=user).exists())
         self.assertTrue(BreathingPractice.objects.filter(is_active=True).exists())
+
+
+class MoodEntryEditDeleteWindowTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username="window@example.com",
+            email="window@example.com",
+            password="StrongPass12345!",
+        )
+        self.client.force_login(self.user)
+
+    def test_old_entry_edit_page_is_blocked_after_24_hours(self):
+        from datetime import timedelta
+        from django.utils import timezone
+
+        entry = MoodEntry.objects.create(
+            user=self.user,
+            date=timezone.localdate() - timedelta(days=2),
+            mood_score=3,
+        )
+
+        old_created_at = timezone.now() - timedelta(hours=25)
+        MoodEntry.objects.filter(pk=entry.pk).update(created_at=old_created_at)
+
+        response = self.client.get(f"/entries/{entry.pk}/edit/")
+
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(MoodEntry.objects.filter(pk=entry.pk).exists())
+
+    def test_old_entry_delete_page_is_blocked_after_24_hours(self):
+        from datetime import timedelta
+        from django.utils import timezone
+
+        entry = MoodEntry.objects.create(
+            user=self.user,
+            date=timezone.localdate() - timedelta(days=2),
+            mood_score=3,
+        )
+
+        old_created_at = timezone.now() - timedelta(hours=25)
+        MoodEntry.objects.filter(pk=entry.pk).update(created_at=old_created_at)
+
+        response = self.client.get(f"/entries/{entry.pk}/delete/")
+
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(MoodEntry.objects.filter(pk=entry.pk).exists())
+
+    def test_old_entry_delete_post_is_blocked_after_24_hours(self):
+        from datetime import timedelta
+        from django.utils import timezone
+
+        entry = MoodEntry.objects.create(
+            user=self.user,
+            date=timezone.localdate() - timedelta(days=2),
+            mood_score=3,
+        )
+
+        old_created_at = timezone.now() - timedelta(hours=25)
+        MoodEntry.objects.filter(pk=entry.pk).update(created_at=old_created_at)
+
+        response = self.client.post(f"/entries/{entry.pk}/delete/")
+
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(MoodEntry.objects.filter(pk=entry.pk).exists())
+
+    def test_fresh_entry_edit_page_is_available_within_24_hours(self):
+        from django.utils import timezone
+
+        entry = MoodEntry.objects.create(
+            user=self.user,
+            date=timezone.localdate(),
+            mood_score=4,
+        )
+
+        response = self.client.get(f"/entries/{entry.pk}/edit/")
+
+        self.assertEqual(response.status_code, 200)
+
