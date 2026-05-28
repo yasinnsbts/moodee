@@ -461,6 +461,10 @@ label {
     --shadow-orange: 0 4px 15px -5px #FF9F66;
 }
 
+html.theme-dark-preload body {
+    background: linear-gradient(165deg, #172A31 0%, #1F3E42 48%, #2B554F 100%);
+}
+
 body {
     margin: 0;
     min-height: 100vh;
@@ -4409,4 +4413,527 @@ select:focus {
     .auth-social-grid {
         grid-template-columns: 1fr;
     }
+}
+/* Dark theme */
+body.theme-dark {
+    --bg-start: #172A31;
+    --bg-mid: #1F3E42;
+    --bg-end: #2B554F;
+
+    --green-dark: #F1FFF8;
+    --green-main: #A7E3CD;
+    --green-soft: #7FC7AD;
+
+    --orange-light: #FFC08F;
+    --orange-main: #FF9F66;
+    --orange-dark: #FF7E40;
+
+    --cream: #223A3B;
+    --cream-strong: #2D4A49;
+    --white-glass: rgba(31, 51, 52, 0.96);
+
+    --text-main: #F7FFFb;
+    --text-soft: #D8F1E8;
+    --text-muted: #B8D8CC;
+    --text-extra-muted: #94B7AA;
+
+    --border-soft: rgba(255, 255, 255, 0.16);
+    --border-input: rgba(255, 255, 255, 0.22);
+
+    --shadow-card: 0 24px 52px -24px rgba(0, 0, 0, 0.68);
+    --shadow-soft: 0 14px 34px -22px rgba(0, 0, 0, 0.55);
+    --shadow-orange: 0 8px 22px -12px rgba(255, 159, 102, 0.62);
+
+    color: var(--text-main);
+}
+
+body.theme-dark .card,
+body.theme-dark .dashboard-hero,
+body.theme-dark .journal-divider,
+body.theme-dark .entry-history-heading,
+body.theme-dark .practice-collection-heading,
+body.theme-dark .ai-section-heading,
+body.theme-dark .profile-actions-heading,
+body.theme-dark .landing-hero,
+body.theme-dark .auth-card,
+body.theme-dark .password-change-card,
+body.theme-dark .delete-confirm-card,
+body.theme-dark .delete-account-card,
+body.theme-dark .profile-settings-card,
+body.theme-dark .profile-user-card,
+body.theme-dark .profile-actions-card,
+body.theme-dark .entry-filter-card,
+body.theme-dark .entry-form-card,
+body.theme-dark .delete-account-card {
+    background:
+        linear-gradient(135deg, rgba(36, 59, 60, 0.97) 0%, rgba(28, 47, 48, 0.96) 100%);
+    border-color: rgba(255, 255, 255, 0.16);
+    box-shadow: 0 24px 52px -26px rgba(0, 0, 0, 0.72);
+}
+
+body.theme-dark h1,
+body.theme-dark h2,
+body.theme-dark h3,
+body.theme-dark h4,
+body.theme-dark .card-label,
+body.theme-dark .entry-date,
+body.theme-dark .entry-info-label,
+body.theme-dark .summary-label,
+body.theme-dark .eyebrow,
+body.theme-dark label,
+body.theme-dark .field span {
+    color: var(--text-main);
+}
+
+body.theme-dark p,
+body.theme-dark .hero-text,
+body.theme-dark .journal-text,
+body.theme-dark .entry-history-text,
+body.theme-dark .profile-actions-text,
+body.theme-dark .ai-heading-text,
+body.theme-dark .landing-description,
+body.theme-dark .landing-subtitle,
+body.theme-dark .small {
+    color: var(--text-soft);
+}
+
+body.theme-dark .summary-item,
+body.theme-dark .metric,
+body.theme-dark .entry-info-box,
+body.theme-dark .entry-score-panel,
+body.theme-dark .entry-score-item,
+body.theme-dark .score-choice-block,
+body.theme-dark .practice-text-box,
+body.theme-dark .ai-insight-item,
+body.theme-dark .landing-question,
+body.theme-dark .landing-question-card,
+body.theme-dark .landing-calm-note,
+body.theme-dark .landing-mood-preview span,
+body.theme-dark .profile-form-fields p:has(input[type="checkbox"]),
+body.theme-dark .emoji-choice-btn {
+    background: rgba(17, 34, 36, 0.72);
+    border-color: rgba(255, 255, 255, 0.14);
+}
+
+body.theme-dark .summary-item strong,
+body.theme-dark .metric h2,
+body.theme-dark .entry-score-item strong,
+body.theme-dark .entry-card h3,
+body.theme-dark .today-checkin-info h2 {
+    color: #FFFFFF;
+}
+
+body.theme-dark .summary-item span,
+body.theme-dark .metric p,
+body.theme-dark .entry-score-item span,
+body.theme-dark .entry-info-box p,
+body.theme-dark .entry-note-box p,
+body.theme-dark .entry-factors p,
+body.theme-dark .entry-gratitude p,
+body.theme-dark .practice-text-box p,
+body.theme-dark .ai-insight-item p,
+body.theme-dark .landing-feature-card p,
+body.theme-dark .profile-user-info p:last-child {
+    color: var(--text-soft);
+}
+
+body.theme-dark input,
+body.theme-dark textarea,
+body.theme-dark select {
+    background: rgba(12, 25, 27, 0.86);
+    border-color: rgba(255, 255, 255, 0.22);
+    color: var(--text-main);
+}
+
+body.theme-dark input:focus,
+body.theme-dark textarea:focus,
+body.theme-dark select:focus {
+    border-color: rgba(167, 227, 205, 0.68);
+    box-shadow: 0 0 0 3px rgba(167, 227, 205, 0.16);
+}
+
+body.theme-dark input::placeholder,
+body.theme-dark textarea::placeholder {
+    color: rgba(216, 241, 232, 0.58);
+}
+
+body.theme-dark option {
+    background: #1F3E42;
+    color: #F7FFFb;
+}
+
+body.theme-dark .hero-badge,
+body.theme-dark .journal-badge,
+body.theme-dark .practice-icon,
+body.theme-dark .landing-feature-icon,
+body.theme-dark .profile-avatar,
+body.theme-dark .auth-logo-wrap,
+body.theme-dark .landing-logo-wrap,
+body.theme-dark .today-mood-badge {
+    background: linear-gradient(135deg, #FFC08F 0%, #FF9F66 100%);
+    color: white;
+    box-shadow: 0 14px 30px -18px rgba(255, 159, 102, 0.75);
+}
+
+body.theme-dark .button.secondary,
+body.theme-dark .entry-soft-button,
+body.theme-dark .profile-soft-button,
+body.theme-dark .password-back-button,
+body.theme-dark .delete-cancel-button,
+body.theme-dark .delete-account-cancel {
+    background: rgba(255, 192, 143, 0.12);
+    border-color: rgba(255, 192, 143, 0.44);
+    color: #FFE3CF;
+}
+
+body.theme-dark .button.secondary:hover,
+body.theme-dark .entry-soft-button:hover,
+body.theme-dark .profile-soft-button:hover,
+body.theme-dark .password-back-button:hover,
+body.theme-dark .delete-cancel-button:hover,
+body.theme-dark .delete-account-cancel:hover {
+    background: rgba(255, 192, 143, 0.22);
+    border-color: rgba(255, 192, 143, 0.72);
+    color: #FFFFFF;
+}
+
+body.theme-dark .button.primary {
+    background: linear-gradient(135deg, #FFB47D 0%, #FF8F5A 100%);
+    color: white;
+    box-shadow: 0 10px 24px -16px rgba(255, 159, 102, 0.9);
+}
+
+body.theme-dark .button.primary:hover {
+    background: linear-gradient(135deg, #FF9F66 0%, #FF7E40 100%);
+}
+
+body.theme-dark .score-choice-btn {
+    background: rgba(12, 25, 27, 0.72);
+    border-color: rgba(255, 255, 255, 0.16);
+    color: var(--text-main);
+}
+
+body.theme-dark .score-choice-btn:hover,
+body.theme-dark .emoji-choice-btn:hover {
+    background: rgba(255, 192, 143, 0.18);
+    border-color: rgba(255, 192, 143, 0.52);
+}
+
+body.theme-dark .score-choice-btn.is-selected,
+body.theme-dark .emoji-choice-btn.is-selected {
+    background: linear-gradient(135deg, #FFB47D 0%, #FF8F5A 100%);
+    border-color: #FFB47D;
+    color: white;
+}
+
+body.theme-dark .profile-form-fields p:has(input[type="checkbox"]:checked) {
+    background: rgba(167, 227, 205, 0.16);
+    border-color: rgba(167, 227, 205, 0.42);
+}
+
+body.theme-dark .profile-form-fields input[type="checkbox"] {
+    background: rgba(12, 25, 27, 0.86);
+    border-color: rgba(255, 255, 255, 0.22);
+}
+
+body.theme-dark .profile-form-fields input[type="checkbox"]::before {
+    background: var(--text-muted);
+}
+
+body.theme-dark .profile-form-fields input[type="checkbox"]:checked {
+    background: linear-gradient(135deg, #8EDCC2 0%, #5FBA9F 100%);
+    border-color: rgba(167, 227, 205, 0.72);
+}
+
+body.theme-dark .profile-form-fields input[type="checkbox"]:checked::before {
+    background: white;
+}
+
+body.theme-dark .bottom-nav {
+    background: rgba(25, 43, 45, 0.94);
+    border-color: rgba(255, 255, 255, 0.16);
+    box-shadow: 0 18px 42px -22px rgba(0, 0, 0, 0.76);
+}
+
+body.theme-dark .bottom-nav-item {
+    color: var(--text-muted);
+}
+
+body.theme-dark .bottom-nav-item:hover,
+body.theme-dark .bottom-nav-item.active {
+    background: rgba(255, 192, 143, 0.18);
+    color: #FFFFFF;
+}
+
+body.theme-dark .message.success {
+    background: rgba(167, 227, 205, 0.18);
+    border-color: rgba(167, 227, 205, 0.34);
+    color: #E7FFF5;
+}
+
+body.theme-dark .message.danger-message,
+body.theme-dark .danger-message {
+    background: rgba(255, 127, 127, 0.15);
+    border-color: rgba(255, 127, 127, 0.34);
+    color: #FFD7D7;
+}
+
+body.theme-dark .ai-disclaimer,
+body.theme-dark .password-note,
+body.theme-dark .delete-account-note {
+    background: rgba(17, 34, 36, 0.52);
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
+body.theme-dark .ai-disclaimer p,
+body.theme-dark .password-note p,
+body.theme-dark .delete-account-note p {
+    color: var(--text-muted);
+}
+
+body.theme-dark a {
+    color: #B9F0DA;
+}
+
+body.theme-dark a:hover {
+    color: #E7FFF5;
+}
+
+/* Practices: fix unreadable meta fields */
+.practice-meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 12px 14px;
+    border-radius: 1rem;
+    background: rgba(255, 248, 239, 0.92);
+    border: 1px solid rgba(255, 224, 181, 0.78);
+}
+
+.practice-meta-item span {
+    color: #6A7C73;
+    font-size: 0.76rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+}
+
+.practice-meta-item strong {
+    color: #20372F;
+    font-size: 1.12rem;
+    font-weight: 850;
+}
+
+/* Dark theme override for practices */
+body.theme-dark .practice-meta-item {
+    background: rgba(255, 248, 239, 0.95);
+    border: 1px solid rgba(255, 224, 181, 0.72);
+    box-shadow: 0 8px 18px -14px rgba(0, 0, 0, 0.22);
+}
+
+body.theme-dark .practice-meta-item span {
+    color: #6C7F77;
+}
+
+body.theme-dark .practice-meta-item strong {
+    color: #17322D;
+}
+
+/* Dashboard entry action buttons readability fix */
+.entry-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    padding-top: 8px;
+}
+
+.entry-action-btn {
+    min-height: 46px;
+    font-weight: 850;
+}
+
+/* Light theme */
+.edit-btn {
+    background: rgba(255, 248, 239, 0.96);
+    color: #2D6A4F;
+    border: 2px solid rgba(74, 158, 134, 0.65);
+}
+
+.edit-btn:hover {
+    background: rgba(232, 247, 239, 0.96);
+    color: #1F513B;
+    border-color: #2D6A4F;
+}
+
+.delete-btn {
+    background: rgba(255, 232, 232, 0.96);
+    color: #9C3535;
+    border: 2px solid rgba(196, 91, 91, 0.72);
+}
+
+.delete-btn:hover {
+    background: #C45B5B;
+    color: white;
+    border-color: #C45B5B;
+}
+
+/* Dark theme */
+body.theme-dark .edit-btn {
+    background: rgba(167, 227, 205, 0.18);
+    color: #E7FFF5;
+    border: 2px solid rgba(167, 227, 205, 0.62);
+}
+
+body.theme-dark .edit-btn:hover {
+    background: rgba(167, 227, 205, 0.28);
+    color: #FFFFFF;
+    border-color: rgba(210, 255, 238, 0.86);
+    box-shadow: 0 10px 24px -18px rgba(167, 227, 205, 0.7);
+}
+
+body.theme-dark .delete-btn {
+    background: rgba(255, 127, 127, 0.18);
+    color: #FFE2E2;
+    border: 2px solid rgba(255, 127, 127, 0.58);
+}
+
+body.theme-dark .delete-btn:hover {
+    background: rgba(255, 127, 127, 0.32);
+    color: #FFFFFF;
+    border-color: rgba(255, 190, 190, 0.86);
+    box-shadow: 0 10px 24px -18px rgba(255, 127, 127, 0.7);
+}
+
+/* Statistics: dark theme readability fix */
+body.theme-dark .mood-distribution-row {
+    background: rgba(17, 34, 36, 0.78);
+    border-color: rgba(255, 255, 255, 0.14);
+}
+
+body.theme-dark .mood-score-badge {
+    background: rgba(255, 248, 239, 0.94);
+    border-color: rgba(255, 224, 181, 0.7);
+}
+
+body.theme-dark .mood-score-badge strong {
+    color: #17322D;
+}
+
+body.theme-dark .mood-score-badge span {
+    color: #52675E;
+}
+
+body.theme-dark .mood-distribution-title span {
+    color: #E7FFF5;
+}
+
+body.theme-dark .mood-distribution-title strong {
+    background: rgba(255, 192, 143, 0.18);
+    color: #FFE3CF;
+    border: 1px solid rgba(255, 192, 143, 0.34);
+}
+
+body.theme-dark .mood-distribution-main p {
+    color: #CFE8DD;
+}
+
+body.theme-dark .mood-distribution-track {
+    background: rgba(255, 255, 255, 0.14);
+}
+
+/* Statistics factor cards */
+body.theme-dark .factor-compare-card {
+    background: rgba(17, 34, 36, 0.78);
+    border-color: rgba(255, 255, 255, 0.14);
+}
+
+body.theme-dark .positive-factor-card {
+    background: rgba(35, 72, 61, 0.72);
+    border-color: rgba(167, 227, 205, 0.28);
+}
+
+body.theme-dark .low-factor-card {
+    background: rgba(76, 42, 42, 0.58);
+    border-color: rgba(255, 127, 127, 0.28);
+}
+
+body.theme-dark .factor-compare-header h3 {
+    color: #F7FFFB;
+}
+
+body.theme-dark .factor-emoji {
+    background: rgba(255, 248, 239, 0.94);
+    color: #17322D;
+}
+
+body.theme-dark .factor-item {
+    background: rgba(12, 25, 27, 0.76);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.theme-dark .factor-item span {
+    color: #E7FFF5;
+}
+
+body.theme-dark .factor-item strong {
+    background: rgba(255, 192, 143, 0.2);
+    color: #FFE3CF;
+    border: 1px solid rgba(255, 192, 143, 0.34);
+}
+
+body.theme-dark .factor-compare-card .soft-text,
+body.theme-dark .factor-compare-card p {
+    color: #CFE8DD;
+}
+
+/* Statistics: best / difficult day readability fix */
+body.theme-dark .day-comparison {
+    gap: 14px;
+}
+
+body.theme-dark .day-card {
+    background: rgba(17, 34, 36, 0.78);
+    border-color: rgba(255, 255, 255, 0.14);
+}
+
+body.theme-dark .day-card h3 {
+    color: #F7FFFB;
+}
+
+body.theme-dark .day-card p {
+    color: #D8F1E8;
+}
+
+body.theme-dark .best-day {
+    background: rgba(35, 72, 61, 0.72);
+    border-color: rgba(167, 227, 205, 0.34);
+}
+
+body.theme-dark .best-day h3 {
+    color: #E7FFF5;
+}
+
+body.theme-dark .best-day p {
+    color: #CFE8DD;
+}
+
+body.theme-dark .difficult-day {
+    background: rgba(76, 42, 42, 0.6);
+    border-color: rgba(255, 127, 127, 0.34);
+}
+
+body.theme-dark .difficult-day h3 {
+    color: #FFF0F0;
+}
+
+body.theme-dark .difficult-day p {
+    color: #FFDADA;
+}
+
+body.theme-dark .day-card strong {
+    color: #FFFFFF;
+}
+
+body.theme-dark .day-card span {
+    color: #D8F1E8;
 }
