@@ -58,9 +58,9 @@ class RegisterForm(forms.Form):
         )
 
         UserSettings.objects.create(
-                user=user,
-                gender=self.cleaned_data["gender"],
-            )
+            user=user,
+            gender=self.cleaned_data["gender"],
+        )
 
         return user
 
