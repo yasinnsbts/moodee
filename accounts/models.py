@@ -9,11 +9,23 @@ class UserSettings(models.Model):
         LIGHT = "light", "Светлая"
         DARK = "dark", "Тёмная"
 
+    class GenderChoices(models.TextChoices):
+        NOT_SPECIFIED = "not_specified", "Не указывать"
+        MALE = "male", "Мужской"
+        FEMALE = "female", "Женский"
+
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="settings",
         verbose_name="Пользователь",
+    )
+
+    gender = models.CharField(
+        max_length=20,
+        choices=GenderChoices.choices,
+        default=GenderChoices.NOT_SPECIFIED,
+        verbose_name="Пол",
     )
 
     theme = models.CharField(

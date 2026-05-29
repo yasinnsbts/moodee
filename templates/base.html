@@ -9,6 +9,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'css/password_toggle.css' %}">
+    <link rel="stylesheet" href="{% static 'css/practice_timer.css' %}">
 </head>
 <script>
     document.addEventListener("change", function (event) {
@@ -49,5 +51,7 @@
 
     <script src="{% static 'js/main.js' %}"></script>
     {% block scripts %}{% endblock %}
+    <script src="{% static 'js/password_toggle.js' %}"></script>
+    <script src="{% static 'js/practice_timer.js' %}"></script>
 </body>
 </html>

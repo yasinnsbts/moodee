@@ -16,6 +16,12 @@ class RegisterForm(forms.Form):
         label="Повторите пароль",
         widget=forms.PasswordInput,
     )
+    gender = forms.ChoiceField(
+        choices=UserSettings.GenderChoices.choices,
+        label="Пол",
+        required=True,
+    )
+
     consent = forms.BooleanField(
         label="Я согласен с условиями обработки персональных данных",
     )
@@ -51,7 +57,10 @@ class RegisterForm(forms.Form):
             first_name=self.cleaned_data["first_name"],
         )
 
-        UserSettings.objects.create(user=user)
+        UserSettings.objects.create(
+                user=user,
+                gender=self.cleaned_data["gender"],
+            )
 
         return user
 
@@ -60,6 +69,7 @@ class UserSettingsForm(forms.ModelForm):
     class Meta:
         model = UserSettings
         fields = [
+            "gender",
             "theme",
             "reminder_enabled",
             "reminder_time",
