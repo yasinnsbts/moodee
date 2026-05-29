@@ -108,11 +108,11 @@ document.addEventListener("DOMContentLoaded", function () {
         const text = card.textContent;
 
         const patterns = [
-            /(\\d+)\\s*минут/i,
-            /(\\d+)\\s*минуты/i,
-            /(\\d+)\\s*минута/i,
-            /(\\d+)\\s*мин\\./i,
-            /(\\d+)\\s*мин/i
+            /(\d+)\s*минут/i,
+            /(\d+)\s*минуты/i,
+            /(\d+)\s*минута/i,
+            /(\d+)\s*мин\./i,
+            /(\d+)\s*мин/i
         ];
 
         for (const pattern of patterns) {
