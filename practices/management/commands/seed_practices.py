@@ -115,6 +115,8 @@ class Command(BaseCommand):
         legacy_titles = [
             "Спокойный выдох",
             "Пауза на тело",
+            "Техника 4–7–8",
+            "Успокаивающее дыхание",
         ]
 
         BreathingPractice.objects.filter(
