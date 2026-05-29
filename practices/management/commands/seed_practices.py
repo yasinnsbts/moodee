@@ -112,6 +112,15 @@ class Command(BaseCommand):
         created_count = 0
         updated_count = 0
 
+        legacy_titles = [
+            "Спокойный выдох",
+            "Пауза на тело",
+        ]
+
+        BreathingPractice.objects.filter(
+            title__in=legacy_titles,
+        ).update(is_active=False)
+
         for item in PRACTICES:
             _, created = BreathingPractice.objects.update_or_create(
                 title=item["title"],

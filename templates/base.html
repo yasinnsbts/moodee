@@ -12,25 +12,7 @@
     <link rel="stylesheet" href="{% static 'css/password_toggle.css' %}">
     <link rel="stylesheet" href="{% static 'css/practice_timer.css' %}">
 </head>
-<script>
-    document.addEventListener("change", function (event) {
-        const input = event.target;
-
-        if (
-            input.matches('input[name="dark_theme"]') ||
-            input.matches('input[name="dark_mode"]') ||
-            input.matches('input[name="theme"]')
-        ) {
-            const isDark = input.type === "checkbox"
-                ? input.checked
-                : input.value === "dark";
-
-            document.body.classList.toggle("theme-dark", isDark);
-            document.body.classList.toggle("theme-light", !isDark);
-        }
-    });
-</script>
-<body class="{% if request.user.is_authenticated and request.user.profile.theme == 'dark' %}theme-dark{% else %}theme-light{% endif %}">
+<body class="{% if request.user.is_authenticated and request.user.settings.theme == 'dark' %}theme-dark{% else %}theme-light{% endif %}">
     <main class="app">
         {% if messages %}
             <div class="messages">
