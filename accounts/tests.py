@@ -11,7 +11,8 @@ class RegisterFormTests(TestCase):
         form = RegisterForm(
             data={
                 "first_name": "Ирина",
-                "email": "new-user@example.com",
+                "gender": "male",
+            "email": "new-user@example.com",
                 "password1": "StrongPass12345!",
                 "password2": "StrongPass12345!",
                 "consent": "on",
@@ -58,7 +59,8 @@ class UserSettingsFormTests(TestCase):
 
         form = UserSettingsForm(
             data={
-                "theme": UserSettings.ThemeChoices.LIGHT,
+                "gender": "not_specified",
+            "theme": UserSettings.ThemeChoices.LIGHT,
                 "reminder_enabled": "on",
                 "reminder_time": "20:30",
                 "ai_analysis_enabled": "on",

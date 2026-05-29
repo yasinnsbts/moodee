@@ -24,6 +24,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
 
     path("", core_views.landing, name="landing"),
+    path("privacy/", core_views.privacy_policy, name="privacy_policy"),
 
     path("", include("accounts.urls")),
     path("", include("mood.urls")),
