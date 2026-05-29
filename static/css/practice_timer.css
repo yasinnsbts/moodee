@@ -141,3 +141,19 @@
         grid-template-columns: 1fr;
     }
 }
+
+.practice-music-toggle {
+    width: 100%;
+    margin-top: 12px;
+    padding: 12px 10px;
+    border: 1px solid var(--border-color, #d8cfc0);
+    border-radius: 14px;
+    background: var(--card-bg, #ffffff);
+    color: var(--text-color, #2d2a26);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.practice-music-toggle:hover {
+    opacity: 0.85;
+}

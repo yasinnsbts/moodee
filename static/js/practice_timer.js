@@ -15,6 +15,11 @@ document.addEventListener("DOMContentLoaded", function () {
     let timerInterval = null;
     let remainingSeconds = 0;
     let initialSeconds = 0;
+    let musicEnabled = true;
+
+    const practiceMusic = new Audio("/static/audio/practice_calm.mp3");
+    practiceMusic.loop = true;
+    practiceMusic.volume = 0.25;
 
     const modal = document.createElement("div");
     modal.className = "practice-timer-modal";
@@ -49,6 +54,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 <button type="button" class="practice-timer-reset">Сброс</button>
             </div>
 
+            <button type="button" class="practice-music-toggle">
+                Музыка: вкл
+            </button>
+
             <p class="practice-timer-note">
                 Если упражнение вызывает дискомфорт, остановитесь и вернитесь к обычному дыханию.
             </p>
@@ -65,6 +74,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const startButton = modal.querySelector(".practice-timer-start");
     const pauseButton = modal.querySelector(".practice-timer-pause");
     const resetButton = modal.querySelector(".practice-timer-reset");
+    const musicToggleButton = modal.querySelector(".practice-music-toggle");
 
     function findPracticeCard(element) {
         return (
@@ -98,11 +108,11 @@ document.addEventListener("DOMContentLoaded", function () {
         const text = card.textContent;
 
         const patterns = [
-            /(\d+)\s*минут/i,
-            /(\d+)\s*минуты/i,
-            /(\d+)\s*минута/i,
-            /(\d+)\s*мин\./i,
-            /(\d+)\s*мин/i
+            /(\\d+)\\s*минут/i,
+            /(\\d+)\\s*минуты/i,
+            /(\\d+)\\s*минута/i,
+            /(\\d+)\\s*мин\\./i,
+            /(\\d+)\\s*мин/i
         ];
 
         for (const pattern of patterns) {
@@ -199,6 +209,25 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    function playMusic() {
+        if (!musicEnabled) {
+            return;
+        }
+
+        practiceMusic.play().catch(function () {
+            // Браузер может заблокировать звук, если пользователь ещё не взаимодействовал со страницей.
+        });
+    }
+
+    function pauseMusic() {
+        practiceMusic.pause();
+    }
+
+    function stopMusic() {
+        practiceMusic.pause();
+        practiceMusic.currentTime = 0;
+    }
+
     function stopTimer() {
         if (timerInterval) {
             clearInterval(timerInterval);
@@ -215,12 +244,15 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
+        playMusic();
+
         timerInterval = setInterval(function () {
             remainingSeconds -= 1;
 
             if (remainingSeconds <= 0) {
                 remainingSeconds = 0;
                 stopTimer();
+                stopMusic();
                 startButton.textContent = "Повторить";
             }
 
@@ -228,8 +260,14 @@ document.addEventListener("DOMContentLoaded", function () {
         }, 1000);
     }
 
+    function pauseTimer() {
+        stopTimer();
+        pauseMusic();
+    }
+
     function resetTimer() {
         stopTimer();
+        stopMusic();
         remainingSeconds = initialSeconds;
         startButton.textContent = "Старт";
         renderTimer();
@@ -237,6 +275,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function openModal(element) {
         const data = getPracticeData(element);
+
+        stopMusic();
 
         initialSeconds = data.durationMinutes * 60;
         remainingSeconds = initialSeconds;
@@ -255,6 +295,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function closeModal() {
         stopTimer();
+        stopMusic();
         modal.classList.remove("is-open");
         modal.setAttribute("aria-hidden", "true");
         document.body.classList.remove("practice-timer-open");
@@ -268,8 +309,23 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     startButton.addEventListener("click", startTimer);
-    pauseButton.addEventListener("click", stopTimer);
+    pauseButton.addEventListener("click", pauseTimer);
     resetButton.addEventListener("click", resetTimer);
+
+    musicToggleButton.addEventListener("click", function () {
+        musicEnabled = !musicEnabled;
+
+        if (musicEnabled) {
+            musicToggleButton.textContent = "Музыка: вкл";
+
+            if (timerInterval) {
+                playMusic();
+            }
+        } else {
+            musicToggleButton.textContent = "Музыка: выкл";
+            pauseMusic();
+        }
+    });
 
     modal.addEventListener("click", function (event) {
         if (event.target.dataset.practiceClose === "true") {
